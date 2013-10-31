@@ -1,3 +1,7 @@
 user:
-  name: 'name'
+  name:
+    attribute: 'name'
+    options:
+      id: true
+
   username: 'login'

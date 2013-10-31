@@ -1,14 +1,10 @@
 require 'rspec'
 require 'spigot'
 require 'hashie'
+require 'active_record'
 require "test/unit"
 require "mocha/setup"
 
-Dir[File.join(Spigot.root, "spec/fixtures/**/*.rb")].each {|f| require f}
-
-# Mocked Classes
-User = Class.new(Hashie::Mash)
-
-module Wrapper
-  Post = Class.new(Hashie::Mash)
+%w(fixtures support).each do |dir|
+  Dir[File.join(Spigot.root, "spec/#{dir}/**/*.rb")].each {|f| require f}
 end

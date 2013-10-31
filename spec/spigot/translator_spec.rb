@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Spigot::Translator do
+
   context '#initialize' do
     it 'requires a service' do
       expect{
@@ -22,12 +23,12 @@ describe Spigot::Translator do
   end
 
   context '#format' do
-    let(:subject){Spigot::Translator.new(:github, User.new)}
+    let(:subject){Spigot::Translator.new(:github, User.new, {a: '1'})}
 
     context 'with a missing map' do
       it 'raises error with a missing file' do
         expect {
-          subject.format({})
+          subject.format
         }.to raise_error(Spigot::MissingServiceError)
       end
     end
@@ -39,7 +40,7 @@ describe Spigot::Translator do
 
       it 'raises error with a missing resource map' do
         expect{
-          subject.format({})
+          subject.format
         }.to raise_error(Spigot::MissingResourceError)
       end
     end
@@ -49,17 +50,13 @@ describe Spigot::Translator do
         subject.stubs(:translations).returns(Spigot::Mapping.basic_user)
       end
 
-      it 'returns nil from nil data' do
-        expect(subject.format(nil)).to eq(nil)
-      end
-
-      it 'returns nil from anything other than a hash' do
-        expect(subject.format(:data)).to eq(nil)
+      it 'returns empty hash from nil data' do
+        expect(subject.format).to eq({})
       end
     end
 
     context 'with basic user data' do
-      let(:data){ Spigot::ApiData.basic_user }
+      let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.basic_user)}
 
       context 'with a basic mapping' do
         before do
@@ -67,7 +64,7 @@ describe Spigot::Translator do
         end
 
         it 'follows one layer' do
-          expect(subject.format(data)).to eq({name: 'Dean Martin', username: 'classyasfuck'})
+          expect(subject.format).to eq({name: 'Dean Martin', username: 'classyasfuck'})
         end
       end
 
@@ -77,20 +74,78 @@ describe Spigot::Translator do
         end
 
         it 'selects the user map' do
-          expect(subject.format(data)).to eq({name: 'Dean Martin', username: 'classyasfuck'})
+          expect(subject.format).to eq({name: 'Dean Martin', username: 'classyasfuck'})
         end
       end
     end
 
     context 'with a namedspaced resource' do
-      let(:data){ Spigot::ApiData.post }
-      let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new)}
+      let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new, Spigot::ApiData.post)}
       before do
         subject.stubs(:translations).returns(Spigot::Mapping.namespaced_post)
       end
 
       it 'accesses the wrapper/post key' do
-        expect(subject.format(data)).to eq({title: 'Regular Article', description: 'dolor sit amet'})
+        expect(subject.format).to eq({title: 'Regular Article', description: 'dolor sit amet'})
+      end
+    end
+  end
+
+  context '#lookup' do
+    let(:subject){Spigot::Translator.new(:github, User.new, {a: '1'})}
+
+    it 'returns the value at a given key' do
+      subject.lookup(:a).should eq('1')
+    end
+  end
+
+  context '#id' do
+    let(:subject){Spigot::Translator.new(:github, User.new, {id: '123'})}
+
+    it 'returns the value at the foreign_key' do
+      subject.stubs(:foreign_key).returns('id')
+      subject.id.should eq('123')
+    end
+  end
+
+  context '#options' do
+    let(:subject){Spigot::Translator.new(:github, User.new, {remote_id: '987'})}
+
+    context 'without options provided' do
+      before do
+        subject.stubs(:translations).returns(Spigot::Mapping.basic_user)
+      end
+
+      context 'defaults' do
+        it '#primary_key is the name of the service _id' do
+          subject.primary_key.should eq('github_id')
+        end
+
+        it '#foreign_key is id' do
+          subject.foreign_key.should eq('id')
+        end
+      end
+    end
+
+    context 'with options provided' do
+      before do
+        subject.stubs(:translations).returns(Spigot::Mapping.user_with_options)
+      end
+
+      it 'reads the options from the spigot key' do
+        subject.options.should eq(Spigot::Mapping.user_with_options['user']['spigot'])
+      end
+
+      context '#primary_key' do
+        it 'reads a primary key from the mapping' do
+          subject.primary_key.should eq('service_id')
+        end
+      end
+
+      context '#foreign_key' do
+        it 'reads a foreign key from the mapping' do
+          subject.foreign_key.should eq('remote_id')
+        end
       end
     end
   end

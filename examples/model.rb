@@ -10,7 +10,7 @@ Spigot.configure do |config|
 end
 
 class User
-  include Spigot::Model
+  include Spigot::Base
 
   attr_reader :name, :login
 

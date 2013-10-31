@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Spigot::Model do
+describe Spigot::Base do
 
   
 

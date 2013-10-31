@@ -4,12 +4,14 @@ module Spigot
   autoload :Configuration, 'spigot/configuration'
   autoload :Translator,    'spigot/translator'
   autoload :Factory,       'spigot/factory'
-  autoload :Model,         'spigot/model'
+  autoload :Base,          'spigot/base'
+  autoload :ActiveRecord,  'spigot/active_record'
 
-  class MissingServiceError < StandardError; end
-  class InvalidServiceError < StandardError; end
+  class MissingServiceError  < StandardError; end
+  class InvalidServiceError  < StandardError; end
   class MissingResourceError < StandardError; end
   class InvalidResourceError < StandardError; end
+  class InvalidDataError     < StandardError; end
 
   def self.config
     Configuration.instance
