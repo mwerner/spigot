@@ -47,7 +47,7 @@ describe Spigot::Translator do
 
     context 'and a valid resource map' do
       before do
-        subject.stubs(:translations).returns(Spigot::Mapping.basic_user)
+        subject.stubs(:translations).returns(Spigot::Mapping::User.basic)
       end
 
       it 'returns empty hash from nil data' do
@@ -60,7 +60,7 @@ describe Spigot::Translator do
 
       context 'with a basic mapping' do
         before do
-          subject.stubs(:translations).returns(Spigot::Mapping.basic_user)
+          subject.stubs(:translations).returns(Spigot::Mapping::User.basic)
         end
 
         it 'follows one layer' do
@@ -82,7 +82,7 @@ describe Spigot::Translator do
     context 'with a namedspaced resource' do
       let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new, Spigot::ApiData.post)}
       before do
-        subject.stubs(:translations).returns(Spigot::Mapping.namespaced_post)
+        subject.stubs(:translations).returns(Spigot::Mapping::Post.namespaced)
       end
 
       it 'accesses the wrapper/post key' do
@@ -113,7 +113,7 @@ describe Spigot::Translator do
 
     context 'without options provided' do
       before do
-        subject.stubs(:translations).returns(Spigot::Mapping.basic_user)
+        subject.stubs(:translations).returns(Spigot::Mapping::User.basic)
       end
 
       context 'defaults' do
@@ -129,11 +129,11 @@ describe Spigot::Translator do
 
     context 'with options provided' do
       before do
-        subject.stubs(:translations).returns(Spigot::Mapping.user_with_options)
+        subject.stubs(:translations).returns(Spigot::Mapping::User.with_options)
       end
 
       it 'reads the options from the spigot key' do
-        subject.options.should eq(Spigot::Mapping.user_with_options['user']['spigot'])
+        subject.options.should eq(Spigot::Mapping::User.with_options['user']['spigot'])
       end
 
       context '#primary_key' do

@@ -13,7 +13,7 @@ module Spigot
       # @param api_data [Hash] The data as received from the remote api, unformatted.
       def new_by_api(service, api_data)
         data = formatted_api_data(service, api_data)
-        Factory.instantiate(self, data)
+        Record.instantiate(self, data)
       end
 
       # #self.formatted_api_data(service, api_data)

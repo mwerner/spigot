@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe Spigot::Factory do
+describe Spigot::Record do
 
 end

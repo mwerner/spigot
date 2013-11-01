@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Spigot::VERSION
   spec.authors       = ["Matthew Werner"]
   spec.email         = ["m@mjw.io"]
-  spec.description   = %q{Spigot provides a clean interface translating API data into context relevant objects}
+  spec.description   = %q{Spigot provides a clean interface to translate API data into context relevant objects}
   spec.summary       = spec.description
   spec.homepage      = "http://github.com/mwerner/spigot"
   spec.license       = "MIT"

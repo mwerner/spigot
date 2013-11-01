@@ -49,6 +49,12 @@ describe Spigot::Configuration do
         Spigot.configure{|config| config.options_key = options_key }
         expect(Spigot.config.options_key).to eq(options_key)
       end
+
+      it "is able to set the logger" do
+        logger = Logger.new(STDOUT)
+        Spigot.configure{|config| config.logger = logger }
+        expect(Spigot.config.logger).to eq(logger)
+      end
     end
   end
 end

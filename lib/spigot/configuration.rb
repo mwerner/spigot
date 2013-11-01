@@ -4,12 +4,13 @@ module Spigot
   class Configuration
     include Singleton
 
-    attr_accessor :path, :translations, :options_key
+    attr_accessor :path, :translations, :options_key, :logger
 
     @@defaults = {
       path: 'config/spigot',
       translations: nil,
-      options_key: 'spigot'
+      options_key: 'spigot',
+      logger: nil
     }
 
     def self.defaults

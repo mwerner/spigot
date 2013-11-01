@@ -22,6 +22,14 @@ You can express the mapping between your model's data and the data received from
 a yaml file. The mappings follow the structure of the data received. Any attribute you wish
 to retain, assign the name of the attribute on your model to that key.
 
+Remember, the key is their attribute, the value is yours:
+
+    user:
+      login: 'email'
+      full_name: 'name'
+
+Reads as: "For Users, their `login` is my `email` and their `full_name` is my `name`"
+
 Basic example:
 
     # Our Model

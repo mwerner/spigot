@@ -1,17 +1,12 @@
 require "spigot/version"
+require "spigot/errors"
 
 module Spigot
   autoload :Configuration, 'spigot/configuration'
   autoload :Translator,    'spigot/translator'
-  autoload :Factory,       'spigot/factory'
+  autoload :Record,        'spigot/record'
   autoload :Base,          'spigot/base'
   autoload :ActiveRecord,  'spigot/active_record'
-
-  class MissingServiceError  < StandardError; end
-  class InvalidServiceError  < StandardError; end
-  class MissingResourceError < StandardError; end
-  class InvalidResourceError < StandardError; end
-  class InvalidDataError     < StandardError; end
 
   def self.config
     Configuration.instance
@@ -23,5 +18,14 @@ module Spigot
 
   def self.root
     File.expand_path('../..', __FILE__)
+  end
+
+  def self.logger
+    @log ||= Spigot.config.logger || begin
+      buffer = Logger.new(STDOUT)
+      buffer.level = $0 == 'irb' ? Logger::DEBUG : Logger::INFO
+      buffer.formatter = proc{|severity, datetime, progname, msg| "#{msg}\n"}
+      buffer
+    end
   end
 end

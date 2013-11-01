@@ -1,7 +1,8 @@
 module Spigot
   module ActiveRecord
     module ClassMethods
-      ## #create_by_api(service, api_data)
+
+      ## #find_by_api(service, api_data)
       def find_by_api(service, api_data)
         find_by_translator Translator.new(service, self, api_data)
       end
@@ -34,23 +35,23 @@ module Spigot
       private
 
       def find_by_translator(translator)
-        unless self.column_exists?(translator.primary_key.to_sym)
-          raise RuntimeError, "The #{translator.primary_key} column does not exist on #{self.class.to_s}"
+        unless self.column_names.include?(translator.primary_key.to_s)
+          raise Spigot::InvalidSchemaError, "The #{translator.primary_key} column does not exist on #{self.to_s}"
         end
 
         if translator.id.blank?
-          raise RuntimeError, "No value found in #{service} api data at #{translator.foreign_key}"
+          raise RuntimeError, "No value found in #{translator.service} api data at #{translator.foreign_key}"
         end
 
-        self.where(["? = ?", translator.primary_key, translator.id]).first
+        self.where(translator.primary_key => translator.id).first
       end
 
       def create_by_translator(translator)
-        Factory.create(self, translator.format)
+        Record.create(self, translator.format)
       end
 
       def update_by_translator(translator, record)
-        # TODO
+        Record.update(self, record, translator.format)
       end
     end
 
