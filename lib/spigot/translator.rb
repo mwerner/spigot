@@ -120,7 +120,7 @@ module Spigot
       begin
         @translation_file ||= File.read(File.join(Spigot.config.path, "#{service.to_s}.yml"))
       rescue Errno::ENOENT => e
-        raise MissingServiceError, "There is no service map for #{service} located in #{Spigot.config.path}"
+        raise MissingServiceError, "There is no service map for #{service} defined"
       end
     end
 
