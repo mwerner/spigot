@@ -1,22 +1,39 @@
 module Spigot
   class Proxy
 
-    attr_reader :owner
+    ## Proxy
+    #
+    # Spigot::Proxy provides accessor methods used by the implementation
+    # that could be useful for development or custom behavior
 
-    def initialize(model)
-      @owner = model
+    attr_reader :resource, :service
+
+    ## #initialize(resource)
+    # Method to initialize a proxy.
+    #
+    # @param service [String] This is the service that dictates the proxy.
+    # @param resource [Object] This is the class implementing the proxy.
+    def initialize(service, resource)
+      @service  = service
+      @resource = resource
     end
 
-    def translator(service)
-      Translator.new(service, owner)
+    ## #translator
+    # Instantiate a Spigot::Translator object with the contextual service and resource
+    def translator
+      Translator.new(service, resource)
     end
 
-    def map(service)
-      translator(service).mapping.reject{|k,v| k == 'spigot'}
+    ## #map
+    # Return a hash of the data map the current translator is using
+    def map
+      translator.mapping.reject{|k,v| k == 'spigot'}
     end
 
-    def options(service)
-      translator(service).mapping['spigot'] || {}
+    ## #options
+    # Return a hash of any service specific options for this translator. `Spigot.config` not included
+    def options
+      translator.mapping['spigot'] || {}
     end
 
   end

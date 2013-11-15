@@ -26,9 +26,11 @@ module Spigot
       end
 
       # #self.spigot
-      # Return a Spigot::SpigotProxy that provides accessor methods to the spigot library
-      def spigot
-        @spigot ||= Spigot::Proxy.new(self)
+      # Return a Spigot::Proxy that provides accessor methods to the spigot library
+      #
+      # @param service [Symbol] Service which pertains to the data being processed on the implementation
+      def spigot(service)
+        Spigot::Proxy.new(service, self)
       end
     end
 

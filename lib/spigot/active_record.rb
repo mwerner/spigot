@@ -3,27 +3,42 @@ module Spigot
     module ClassMethods
 
       ## #find_by_api(service, api_data)
-      #
       # Build a query based on the defined map for this resource
-      # to find a single matching record in this model's table
+      # to find a single matching record in the database
+      #
+      # @param service [Symbol] Service from which the data was received
+      # @param api_data [Hash] The data as received from the remote api, unformatted.
       def find_by_api(service, api_data)
         find_all_by_api(service, api_data).first
       end
 
       ## #find_all_by_api(service, api_data)
-      #
       # Build a query based on the defined map for this resource
-      # to find all matching records in this model's table
+      # to find all matching records in the database
+      #
+      # @param service [Symbol] Service from which the data was received
+      # @param api_data [Hash] The data as received from the remote api, unformatted.
       def find_all_by_api(service, api_data)
         find_by_translator Translator.new(service, self, api_data)
       end
 
       ## #create_by_api(service, api_data)
+      # Insert mapped data into the calling model's table. Does not
+      # do any checks on existing content already present in the database
+      #
+      # @param service [Symbol] Service from which the data was received
+      # @param api_data [Hash] The data as received from the remote api, unformatted.
       def create_by_api(service, api_data)
         create_by_translator Translator.new(service, self, api_data)
       end
 
       ## #update_by_api(service, api_data)
+      # Queries the database to find an existing record, based on the options
+      # provided to spigot. If a record is found, it updates that record
+      # with any new data received by the API
+      #
+      # @param service [Symbol] Service from which the data was received
+      # @param api_data [Hash] The data as received from the remote api, unformatted.
       def update_by_api(service, api_data)
         babel = Translator.new(service, self, api_data)
         record = find_by_translator(babel)
@@ -31,12 +46,24 @@ module Spigot
       end
 
       ## #find_or_create_by_api(service, api_data)
+      # Queries the database to find an existing record. If that record is found
+      # simply return it, otherwise create a new record and return it. This does
+      # not update any existing record. If you want that, use `create_or_update_by_api`
+      #
+      # @param service [Symbol] Service from which the data was received
+      # @param api_data [Hash] The data as received from the remote api, unformatted.
       def find_or_create_by_api(service, api_data)
         babel = Translator.new(service, self, api_data)
         find_by_translator(babel) || create_by_translator(babel)
       end
 
       ## #create_or_update_by_api(service, api_data)
+      # Queries the database to find an existing record. If that record is found
+      # it updates it with passed api_data and returns the record. Otherwise it
+      # creates a new record and returns the newly created record.
+      #
+      # @param service [Symbol] Service from which the data was received
+      # @param api_data [Hash] The data as received from the remote api, unformatted.
       def create_or_update_by_api(service, api_data)
         babel = Translator.new(service, self, api_data)
         record = find_by_translator(babel).first

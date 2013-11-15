@@ -8,24 +8,24 @@ module Spigot
     # Translator reads the yaml file in the spigot config directory for
     # a given service. It looks up the key for the resource class name
     # passed in, then translates the data received into the format described
-    # in the yaml file for that resource
+    # in the yaml file for that resource.
     #
     # Relevant Configuration:
-    # config.options_key  => The key which the Translator uses to configure a resource mapping
-    # config.path         => The path which the Translator will look in to find the mappings
-    # config.translations => A hash that overrides any mappings found in the `path` directory
+    # config.options_key  => The key which the Translator uses to configure a resource mapping.
+    # config.path         => The path which the Translator will look in to find the mappings.
+    # config.translations => A hash that overrides any mappings found in the `path` directory.
 
     attr_reader :service, :resource
     attr_accessor :data
 
     OPTIONS = %w(primary_key foreign_key conditions).freeze
 
-    # #initialize(service, resource, data)
+    ## #initialize(service, resource, data)
     # Method to initialize a translator.
     #
-    # @param service [Symbol] Service which will be doing the translating. Must have a corresponding yaml file
+    # @param service  [Symbol] Service doing the translating. Must have a corresponding yaml file.
     # @param resource [Object] This is the class using the translator.
-    # @param data [Hash] Data in the format received by the api (optional)
+    # @param data     [Hash] Data in the format received by the api (optional).
     def initialize(service, resource, data={})
       @service = service
       raise InvalidServiceError, 'You must provide a service name' if service.nil? || service == ''
@@ -35,9 +35,9 @@ module Spigot
     end
 
     ## #format(custom_map)
-    # Formats the hash of data passed in to the format specified in the yaml file
+    # Formats the hash of data passed in to the format specified in the yaml file.
     #
-    # @param custom_map [Hash] Optional hash that you can prefer to use over the correlated translation
+    # @param custom_map [Hash] Optional hash that you can prefer to use over the correlated translation.
     def format(custom_map=nil)
       translations = custom_map || mapping
       formatted = {}
@@ -50,34 +50,31 @@ module Spigot
     end
 
     ## #id
-    #
-    # The value at the foreign_key attribute specified in the resource options, defaults to 'id'
+    # The value at the foreign_key attribute specified in the resource options, defaults to 'id'.
     def id
       @id ||= lookup(foreign_key)
     end
 
     ## #lookup(attribute)
+    # Find the value in the unformatted api data that matches the passed in key.
     #
-    # Find the value in the unformatted api data that matches the passed in key
-    #
-    # @param service [Symbol] The key pointing to the value you wish to lookup
+    # @param attribute [String] The key pointing to the value you wish to lookup.
     def lookup(attribute)
       data.detect{|k, v| k.to_s == attribute.to_s }.try(:last)
     end
 
     ## #options
-    #
-    # Available options per resource
+    # Available options per resource.
     #
     # @primary_key:
     #   Default: "#{service}_id"
-    #   Name of the column in your local database that serves as id for an external resource
+    #   Name of the column in your local database that serves as id for an external resource.
     # @foreign_key:
     #   Default: "id"
     #   Name of the key representing the resource's ID in the data received from the API.
     # @conditions:
     #   Default: nil
-    #   Array of attributes included in the database query, these are names of columns in your database
+    #   Array of attributes included in the database query, these are names of columns in your database.
     def options
       @options ||= mapping[Spigot.config.options_key] || {}
     end
@@ -96,6 +93,8 @@ module Spigot
       format(keys)
     end
 
+    ## #mapping
+    # Return a hash of the data map currently being used by this translator, including options.
     def mapping
       return @mapping if defined?(@mapping)
       @mapping = translations[resource_key.to_s]
