@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe Spigot::Translator do
 
+  after(:each) do
+    Spigot.config.reset
+  end
+
   context '#initialize' do
     it 'requires a service' do
       expect{
@@ -46,9 +50,7 @@ describe Spigot::Translator do
     end
 
     context 'and a valid resource map' do
-      before do
-        subject.stubs(:translations).returns(Spigot::Mapping::User.basic)
-      end
+      with_mapping(:basic_user, Spigot::Mapping::User.basic)
 
       it 'returns empty hash from nil data' do
         expect(subject.format).to eq({})
@@ -59,34 +61,28 @@ describe Spigot::Translator do
       let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.basic_user)}
 
       context 'with a basic mapping' do
-        before do
-          subject.stubs(:translations).returns(Spigot::Mapping::User.basic)
-        end
+        with_mapping(:basic_user, Spigot::Mapping::User.basic)
 
-        it 'follows one layer' do
-          expect(subject.format).to eq({name: 'Dean Martin', username: 'classyasfuck'})
+        it 'reads one layer' do
+          expect(subject.format).to eq({'name' => 'Dean Martin', 'username' => 'classyasfuck'})
         end
       end
 
       context 'with a mapping containing several resources' do
-        before do
-          subject.stubs(:translations).returns(Spigot::Mapping.multiple_resources)
-        end
+        with_mapping(:multiple_resources, Spigot::Mapping.multiple_resources)
 
         it 'selects the user map' do
-          expect(subject.format).to eq({name: 'Dean Martin', username: 'classyasfuck'})
+          expect(subject.format).to eq({'name' => 'Dean Martin', 'username' => 'classyasfuck'})
         end
       end
     end
 
     context 'with a namedspaced resource' do
       let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new, Spigot::ApiData.post)}
-      before do
-        subject.stubs(:translations).returns(Spigot::Mapping::Post.namespaced)
-      end
+      with_mapping(:namespaced_post, Spigot::Mapping::Post.namespaced)
 
       it 'accesses the wrapper/post key' do
-        expect(subject.format).to eq({title: 'Regular Article', description: 'dolor sit amet'})
+        expect(subject.format).to eq({'title' => 'Regular Article', 'description' => 'dolor sit amet'})
       end
     end
   end
@@ -108,13 +104,35 @@ describe Spigot::Translator do
     end
   end
 
+  context '#conditions' do
+    let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.user)}
+    with_mapping(:user_with_conditions, Spigot::Mapping::User.with_options)
+
+    it 'should return a hash' do
+      previous_translations = Spigot.config.translations
+      Spigot.configure{|c| c.translations = Spigot::Mapping::User.with_options }
+      subject.conditions.should eq({"username"=>"classyasfuck"})
+      Spigot.configure{|c| c.translations = previous_translations }
+    end
+
+    context 'with conditions specified' do
+      with_mapping(:user_with_conditions, Spigot::Mapping::User.with_conditions)
+
+      it 'can specify the keys used in the map options' do
+        subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
+      end
+
+      it 'can specify only one key' do
+        subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
+      end
+    end
+  end
+
   context '#options' do
     let(:subject){Spigot::Translator.new(:github, User.new, {remote_id: '987'})}
 
     context 'without options provided' do
-      before do
-        subject.stubs(:translations).returns(Spigot::Mapping::User.basic)
-      end
+      with_mapping(:basic_user, Spigot::Mapping::User.basic)
 
       context 'defaults' do
         it '#primary_key is the name of the service _id' do
@@ -128,9 +146,7 @@ describe Spigot::Translator do
     end
 
     context 'with options provided' do
-      before do
-        subject.stubs(:translations).returns(Spigot::Mapping::User.with_options)
-      end
+      with_mapping(:user_with_options, Spigot::Mapping::User.with_options)
 
       it 'reads the options from the spigot key' do
         subject.options.should eq(Spigot::Mapping::User.with_options['user']['spigot'])
@@ -138,13 +154,13 @@ describe Spigot::Translator do
 
       context '#primary_key' do
         it 'reads a primary key from the mapping' do
-          subject.primary_key.should eq('service_id')
+          subject.primary_key.should eq('username')
         end
       end
 
       context '#foreign_key' do
         it 'reads a foreign key from the mapping' do
-          subject.foreign_key.should eq('remote_id')
+          subject.foreign_key.should eq('login')
         end
       end
     end

@@ -9,16 +9,23 @@ class ActiveUser < ActiveRecord::Base
 end
 
 map = {'activeuser' => {
-        name: 'name',
-        login: 'username',
-        'spigot' => {
-          'primary_key' => 'username',
-          'foreign_key' => 'login'
-        }
-      }}
+  'name' => 'name',
+  'username' => 'login',
+  'spigot' => {
+    'primary_key' => 'username'
+  }
+}}
+
+conditions = {'activeuser' => {
+  'name' => 'name',
+  'login' => 'username',
+  'spigot' => {
+    'primary_key' => 'username'
+  }
+}}
 
 Spigot.configure do |config|
-  config.translations = map
+  config.translations = conditions
 end
 
 user = ActiveUser.create(name: 'Matt', username: 'mttwrnr', token: 'abc123')

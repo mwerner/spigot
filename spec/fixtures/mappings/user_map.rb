@@ -10,14 +10,22 @@ module Spigot
         {'user' => base.merge('spigot' => options)}
       end
 
+      def self.with_conditions
+        {'user' => base.merge('spigot' => options.merge(conditions))}
+      end
+
       private
 
       def self.base
-        {name: 'name', login: 'username'}
+        {full_name: 'name', login: 'username'}
       end
 
       def self.options
-        {'primary_key' => 'service_id', 'foreign_key' => 'remote_id'}
+        {'primary_key' => 'username', 'foreign_key' => 'login'}
+      end
+
+      def self.conditions
+        {'conditions' => 'username, name'}
       end
     end
 

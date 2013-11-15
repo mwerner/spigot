@@ -18,7 +18,7 @@ module Spigot
     attr_reader :service, :resource
     attr_accessor :data
 
-    OPTIONS = %w(primary_key foreign_key).freeze
+    OPTIONS = %w(primary_key foreign_key conditions).freeze
 
     # #initialize(service, resource, data)
     # Method to initialize a translator.
@@ -34,14 +34,17 @@ module Spigot
       @data = data || {}
     end
 
-    ## #format
+    ## #format(custom_map)
     # Formats the hash of data passed in to the format specified in the yaml file
-    def format
+    #
+    # @param custom_map [Hash] Optional hash that you can prefer to use over the correlated translation
+    def format(custom_map=nil)
+      translations = custom_map || mapping
       formatted = {}
       data.each_pair do |key, val|
         next if key == Spigot.config.options_key
-        attribute = mapping[key]
-        formatted.merge!(attribute.to_sym => data[key]) unless attribute.nil?
+        attribute = translations[key.to_s]
+        formatted.merge!(attribute.to_s => data[key]) unless attribute.nil?
       end
       formatted
     end
@@ -72,11 +75,14 @@ module Spigot
     # @primary_key:
     #   Default: "#{service}_id"
     #   Name of the column in your local database that serves as id for an external resource
-    # foreign_key:
-    #   Default: 'id'
-    #   Name of the attribute in the unformatted api_data that is the key to that record's id
+    # @foreign_key:
+    #   Default: "id"
+    #   Name of the key representing the resource's ID in the data received from the API.
+    # @conditions:
+    #   Default: nil
+    #   Array of attributes included in the database query, these are names of columns in your database
     def options
-      @options ||= mapping['spigot'] || {}
+      @options ||= mapping[Spigot.config.options_key] || {}
     end
 
     def primary_key
@@ -87,13 +93,23 @@ module Spigot
       options['foreign_key'] || 'id'
     end
 
-    private
+    def conditions
+      p_keys = [*(condition_keys.blank? ? primary_key : condition_keys)].map(&:to_s)
+      keys   = mapping.select{|k, v| p_keys.include?(v.to_s) }
+      format(keys)
+    end
 
     def mapping
       return @mapping if defined?(@mapping)
-      @mapping = translations[resource_key]
+      @mapping = translations[resource_key.to_s]
       raise MissingResourceError, "There is no #{resource_key} mapping for #{service}" if @mapping.nil?
       @mapping
+    end
+
+    private
+
+    def condition_keys
+      options['conditions'].to_s.split(',').map(&:strip)
     end
 
     def resource_key
@@ -101,7 +117,7 @@ module Spigot
     end
 
     def translations
-      Spigot.config.translations || YAML.load(translation_file)
+      @translations ||= Spigot.config.translations || YAML.load(translation_file)
     end
 
     def translation_file

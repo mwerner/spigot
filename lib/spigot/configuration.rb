@@ -18,6 +18,10 @@ module Spigot
     end
 
     def initialize
+      reset
+    end
+
+    def reset
       @@defaults.each_pair{|k,v| self.send("#{k}=",v)}
     end
   end

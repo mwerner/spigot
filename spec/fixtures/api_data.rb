@@ -2,7 +2,7 @@ module Spigot
   class ApiData
 
     def self.basic_user
-      {name: 'Dean Martin', login: 'classyasfuck'}
+      {full_name: 'Dean Martin', login: 'classyasfuck'}
     end
 
     def self.user
