@@ -7,6 +7,7 @@ module Spigot
   autoload :Record,        'spigot/record'
   autoload :Base,          'spigot/base'
   autoload :ActiveRecord,  'spigot/active_record'
+  autoload :Proxy,         'spigot/proxy'
 
   def self.config
     Configuration.instance

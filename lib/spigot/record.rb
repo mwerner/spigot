@@ -47,7 +47,7 @@ module Spigot
 
     def update
       record.assign_attributes(data)
-      record.save!
+      record.save! if record.changed?
     end
 
   end

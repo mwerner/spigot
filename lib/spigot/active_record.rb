@@ -43,14 +43,6 @@ module Spigot
         record.present? ? update_by_translator(babel, record) : create_by_translator(babel)
       end
 
-      def spigot_map(service)
-        Translator.new(service, self).mapping.reject{|k,v| k == 'spigot'}
-      end
-
-      def spigot_options(service)
-        Translator.new(service, self).mapping['spigot'] || {}
-      end
-
       private
 
       def find_by_translator(translator)
@@ -59,10 +51,9 @@ module Spigot
         end
 
         if translator.id.blank?
-          Spigot.logger.warn "  <Spigot::Warning> #{translator.service} api data at :#{translator.foreign_key} is nil"
+          Spigot.logger.warn "   <Spigot::Warning> No #{translator.service} API data found at :#{translator.foreign_key}"
         end
 
-        puts translator.conditions.inspect
         return [] if translator.conditions.blank?
         self.where(translator.conditions)
       end
@@ -73,6 +64,7 @@ module Spigot
 
       def update_by_translator(translator, record)
         Record.update(self, record, translator.format)
+        record
       end
 
       def invalid_primary_keys?(translator)

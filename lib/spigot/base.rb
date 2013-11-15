@@ -24,6 +24,12 @@ module Spigot
       def formatted_api_data(service, api_data)
         Translator.new(service, self, api_data).format
       end
+
+      # #self.spigot
+      # Return a Spigot::SpigotProxy that provides accessor methods to the spigot library
+      def spigot
+        @spigot ||= Spigot::Proxy.new(self)
+      end
     end
 
     private

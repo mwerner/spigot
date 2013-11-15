@@ -53,7 +53,7 @@ module Spigot
     #
     # The value at the foreign_key attribute specified in the resource options, defaults to 'id'
     def id
-      @id ||= lookup foreign_key
+      @id ||= lookup(foreign_key)
     end
 
     ## #lookup(attribute)
@@ -62,10 +62,7 @@ module Spigot
     #
     # @param service [Symbol] The key pointing to the value you wish to lookup
     def lookup(attribute)
-      data.each_pair do |key, val|
-        return data[key] if key.to_sym == attribute.to_sym
-      end
-      nil
+      data.detect{|k, v| k.to_s == attribute.to_s }.try(:last)
     end
 
     ## #options
@@ -90,7 +87,7 @@ module Spigot
     end
 
     def foreign_key
-      options['foreign_key'] || 'id'
+      options['foreign_key'] || mapping.invert[primary_key] || 'id'
     end
 
     def conditions
