@@ -3,8 +3,8 @@ require 'spigot'
 Spigot.configure do |config|
   config.translations = {
     'user' => {
-      full_name: 'name',
-      login: 'username'
+      'full_name' => 'name',
+      'login' => 'username'
     }
   }
 end
@@ -12,7 +12,7 @@ end
 class User
   include Spigot::Base
 
-  attr_reader :name, :login
+  attr_reader :name, :username
 
   def initialize(params={})
     params.each_pair do |k, v|

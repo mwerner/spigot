@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Spigot::VERSION
   spec.authors       = ["Matthew Werner"]
   spec.email         = ["m@mjw.io"]
-  spec.description   = %q{Spigot provides a clean interface to translate API data into context relevant objects}
+  spec.description   = %q{Spigot provides a clean interface translating API data into context relevant objects}
   spec.summary       = spec.description
   spec.homepage      = "http://github.com/mwerner/spigot"
   spec.license       = "MIT"
@@ -17,8 +17,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = Dir.glob("spec/**/*")
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'json'
-  spec.add_dependency 'activesupport'
+  spec.add_dependency 'activerecord'
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
@@ -26,5 +25,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "mocha"
   spec.add_development_dependency 'hashie'
   spec.add_development_dependency 'sqlite3'
-  spec.add_development_dependency 'activerecord'
 end
