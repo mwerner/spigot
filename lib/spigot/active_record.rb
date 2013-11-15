@@ -41,7 +41,7 @@ module Spigot
       # @param api_data [Hash] The data as received from the remote api, unformatted.
       def update_by_api(service, api_data)
         babel = Translator.new(service, self, api_data)
-        record = find_by_translator(babel)
+        record = find_by_translator(babel).first
         update_by_translator(babel, record) if record.present?
       end
 
@@ -54,7 +54,7 @@ module Spigot
       # @param api_data [Hash] The data as received from the remote api, unformatted.
       def find_or_create_by_api(service, api_data)
         babel = Translator.new(service, self, api_data)
-        find_by_translator(babel) || create_by_translator(babel)
+        find_by_translator(babel).first || create_by_translator(babel)
       end
 
       ## #create_or_update_by_api(service, api_data)

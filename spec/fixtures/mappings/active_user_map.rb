@@ -11,6 +11,10 @@ module Spigot
         {'activeuser' => base.merge('spigot' => options)}
       end
 
+      def self.non_unique_key
+        {'activeuser' => base.merge('auth_token' => 'token', 'spigot' => non_unique)}
+      end
+
       def self.with_invalid_options
         {'activeuser' => base.merge('spigot' => invalid_options)}
       end
@@ -18,11 +22,15 @@ module Spigot
       private
 
       def self.base
-        {'name' => 'name', 'login' => 'username'}
+        {'full_name' => 'name', 'login' => 'username'}
       end
 
       def self.options
         {'primary_key' => 'username', 'foreign_key' => 'login'}
+      end
+
+      def self.non_unique
+        {'primary_key' => 'token', 'foreign_key' => 'auth_token'}
       end
 
       def self.invalid_options

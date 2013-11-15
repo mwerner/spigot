@@ -31,3 +31,10 @@ def with_mapping(name, map)
     Spigot.configure{|c| c.translations = map_cache }
   end
 end
+
+RSpec.configure do |config|
+  config.after(:each) do
+    ActiveUser.delete_all
+    Spigot.config.reset
+  end
+end

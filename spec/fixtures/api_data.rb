@@ -9,6 +9,10 @@ module Spigot
       {'full_name' => 'Dean Martin', 'login' => 'classyasfuck', 'auth_token' => '123abc'}
     end
 
+    def self.updated_user
+      {'full_name' => 'Frank Sinatra', 'login' => 'livetilidie', 'auth_token' => '456bcd'}
+    end
+
     def self.basic_post
       {'title' => 'Brief Article', 'body' => 'lorem ipsum'}
     end

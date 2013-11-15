@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe Spigot::Translator do
 
-  after(:each) do
-    Spigot.config.reset
-  end
-
   context '#initialize' do
     it 'requires a service' do
       expect{
