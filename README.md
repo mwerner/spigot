@@ -12,7 +12,7 @@ to do this manual mapping at creation, such as:
       t.base_ref   = pull.base.ref
       t.base_sha   = pull.base.sha
     end
-    
+
 Spigot reads config files in an expected format to map the data you receive to the columns of your database.
 This get's particularly difficult as you start having multiple sources for the same resource (ex: users).
 
@@ -20,15 +20,14 @@ Spigot is able to do the translation for you and put the API data into a languag
 This leaves you with a simple statement to accomplish the same as above:
 
     Pull.find_or_create_by_api(:github, pull)
-    
+
 Much better.
 
 ## Example
 
     # Our Model
-    class User
+    class User < ActiveRecord::Base
       include Spigot::Base
-      attr_accessor :name, :email, :auth
     end
 
     # Api Data Received
@@ -41,8 +40,8 @@ Much better.
       token: auth
 
     # Usage
-    User.new_by_api(data).inspect
-    #=> #<User:0x007ffa2918c7b8 @name="Dean Martin", @email="dino@amore.io", @auth="abc123">
+    User.find_or_create_by_api(:github, data).inspect
+    #=> #<User id: 1, name: "Dean Martin", email: "dino@amore.io", token: "abc123">
 
 ## Installation
 
