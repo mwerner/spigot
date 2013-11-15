@@ -13,6 +13,19 @@ module Spigot
       {'full_name' => 'Frank Sinatra', 'login' => 'livetilidie', 'auth_token' => '456bcd'}
     end
 
+    def self.nested_user
+      {'full_name' => 'Dean Martin', 'login' => {
+        'email' => 'dino@amore.io',
+        'user_name' => 'classyasfuck'
+      }, 'auth_token' => '123abc'}
+    end
+
+    def self.double_nested_user
+      {'full_name' => 'Dean Martin', 'login' => {
+        'contact' => {'work_email' => 'dino@amore.io', 'user_name' => 'classyasfuck' }
+      }, 'auth_token' => '123abc'}
+    end
+
     def self.basic_post
       {'title' => 'Brief Article', 'body' => 'lorem ipsum'}
     end

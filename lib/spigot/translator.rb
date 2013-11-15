@@ -37,14 +37,24 @@ module Spigot
     ## #format(custom_map)
     # Formats the hash of data passed in to the format specified in the yaml file.
     #
-    # @param custom_map [Hash] Optional hash that you can prefer to use over the correlated translation.
-    def format(custom_map=nil)
-      translations = custom_map || mapping
+    # @param custom_map  [Hash] Optional hash that you can prefer to use over the correlated translation.
+    # @param custom_data [Hash] Optional data that you can prefer to use over the @data currently on the object.
+    def format(custom_map=nil, custom_data=nil)
+      map = custom_map || mapping
+      dataset = custom_data || data
+
       formatted = {}
-      data.each_pair do |key, val|
+      dataset.each_pair do |key, val|
         next if key == Spigot.config.options_key
-        attribute = translations[key.to_s]
-        formatted.merge!(attribute.to_s => data[key]) unless attribute.nil?
+
+        attribute = map[key.to_s]
+        next if attribute.nil?
+
+        if attribute.is_a?(Hash)
+          formatted.merge!(format(attribute, val))
+        else
+          formatted.merge!(attribute.to_s => val)
+        end
       end
       formatted
     end

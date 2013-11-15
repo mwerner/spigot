@@ -6,6 +6,16 @@ module Spigot
         {'user' => base}
       end
 
+      def self.nested
+        {'user' => base.merge('login' => {'email' => 'contact', 'user_name' => 'username'})}
+      end
+
+      def self.nested_twice
+        {'user' => base.merge('login' => {
+          'contact' => {'work_email' => 'email', 'user_name' => 'username'}
+        })}
+      end
+
       def self.with_options
         {'user' => base.merge('spigot' => options)}
       end

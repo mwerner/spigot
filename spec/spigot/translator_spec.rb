@@ -64,11 +64,25 @@ describe Spigot::Translator do
         end
       end
 
-      context 'with a mapping containing several resources' do
-        with_mapping(:multiple_resources, Spigot::Mapping.multiple_resources)
+      context 'with a mapping containing nested data' do
+        let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.nested_user)}
+        with_mapping(:basic_user, Spigot::Mapping::User.nested)
 
-        it 'selects the user map' do
-          expect(subject.format).to eq({'name' => 'Dean Martin', 'username' => 'classyasfuck'})
+        it 'traverses into the nested hash' do
+          expect(subject.format).to eq({
+            'name' => 'Dean Martin',
+            'username' => 'classyasfuck',
+            'contact' => 'dino@amore.io'
+          })
+        end
+
+        context 'twice' do
+          with_mapping(:basic_user, Spigot::Mapping::User.nested_twice)
+          let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.double_nested_user)}
+
+          it 'traverses multiple levels' do
+            expect(subject.format.values).to include(*['Dean Martin','classyasfuck','dino@amore.io'])
+          end
         end
       end
     end
