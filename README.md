@@ -11,6 +11,7 @@ to do this manual mapping at creation, such as:
       t.head_sha   = pull.head.sha
       t.base_ref   = pull.base.ref
       t.base_sha   = pull.base.sha
+      t.save
     end
 
 Spigot reads config files in an expected format to map the data you receive to the columns of your database.
