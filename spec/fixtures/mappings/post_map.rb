@@ -14,7 +14,7 @@ module Spigot
       private
 
       def self.base
-        {title: 'title', body: 'description'}
+        {'title' => 'title', 'body' => 'description'}
       end
     end
 

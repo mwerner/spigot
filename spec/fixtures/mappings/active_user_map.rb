@@ -18,7 +18,7 @@ module Spigot
       private
 
       def self.base
-        {name: 'name', login: 'username'}
+        {'name' => 'name', 'login' => 'username'}
       end
 
       def self.options
