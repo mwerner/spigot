@@ -14,7 +14,7 @@ to do this manual mapping at creation, such as:
     end
 
 Spigot reads config files in an expected format to map the data you receive to the columns of your database.
-This get's particularly difficult as you start having multiple sources for the same resource (ex: users).
+This becomes particularly difficult as you start having multiple sources for the same resource (ex: users).
 
 Spigot is able to do the translation for you and put the API data into a language your implementation understands.
 This leaves you with a simple statement to accomplish the same as above:
