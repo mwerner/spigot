@@ -1,5 +1,8 @@
 # Spigot
 
+[![Build Status](https://travis-ci.org/mwerner/spigot.png?branch=master)](https://travis-ci.org/mwerner/spigot)
+[![Code Climate](https://codeclimate.com/github/mwerner/spigot.png)](https://codeclimate.com/github/mwerner/spigot)
+
 Spigot is an attempt to bring some sanity to consuming external API data. Without Spigot, you need
 to do this manual mapping at creation, such as:
 
