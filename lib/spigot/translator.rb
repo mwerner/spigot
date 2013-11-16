@@ -43,20 +43,11 @@ module Spigot
       map = custom_map || mapping
       dataset = custom_data || data
 
-      formatted = {}
-      dataset.each_pair do |key, val|
-        next if key == Spigot.config.options_key
-
-        attribute = map[key.to_s]
-        next if attribute.nil?
-
-        if attribute.is_a?(Hash)
-          formatted.merge!(format(attribute, val))
-        else
-          formatted.merge!(attribute.to_s => val)
-        end
+      if dataset.is_a?(Array)
+        dataset.map{|n| translate(map, n) }
+      elsif dataset.is_a?(Hash)
+        translate(map, dataset)
       end
-      formatted
     end
 
     ## #id
@@ -113,6 +104,35 @@ module Spigot
     end
 
     private
+
+    def translate(map, dataset)
+      formatted = {}
+
+      if dataset.is_a?(Array)
+        return dataset.map{|element| translate(map, element)}
+      else
+        dataset.each_pair do |key, val|
+          next if key == Spigot.config.options_key
+          attribute = map[key.to_s]
+          next if attribute.nil?
+
+          result = attribute.is_a?(Hash) ? translate(attribute, val) : val
+          formatted.merge! mergeable_content(key, result, map)
+        end
+      end
+
+      formatted
+    end
+
+    def mergeable_content(key, value, map)
+      if value.is_a?(Array)
+        {key.to_s => value}
+      elsif value.is_a?(Hash)
+        value
+      else
+        {map[key.to_s] => value}
+      end
+    end
 
     def condition_keys
       options['conditions'].to_s.split(',').map(&:strip)

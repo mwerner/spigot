@@ -16,6 +16,14 @@ module Spigot
         })}
       end
 
+      def self.array
+        {'user' => base}
+      end
+
+      def self.nested_array
+        {'user' => {'account' => 'name', 'count' => 'user_count', 'users' => base}}
+      end
+
       def self.with_options
         {'user' => base.merge('spigot' => options)}
       end

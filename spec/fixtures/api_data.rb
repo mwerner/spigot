@@ -26,6 +26,14 @@ module Spigot
       }, 'auth_token' => '123abc'}
     end
 
+    def self.user_array
+      [{'full_name' => 'Dean Martin', 'login' => 'classyasfuck'}, {'full_name' => 'Frank Sinatra', 'login' => 'livetilidie'}]
+    end
+
+    def self.nested_user_array
+      {'account' => 'Rockafella', 'users' => user_array, 'count' => 2}
+    end
+
     def self.basic_post
       {'title' => 'Brief Article', 'body' => 'lorem ipsum'}
     end

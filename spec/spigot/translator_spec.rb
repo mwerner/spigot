@@ -87,6 +87,26 @@ describe Spigot::Translator do
       end
     end
 
+    context 'with an array of values' do
+      let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.user_array)}
+      with_mapping(:basic_user, Spigot::Mapping::User.basic)
+
+      it 'returns an array of formatted data' do
+        expect(subject.format.length).to eq(2)
+        expect(subject.format.map{|u| u['name']}).to include('Dean Martin', 'Frank Sinatra')
+      end
+    end
+
+    context 'with a nested array of values' do
+      let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.nested_user_array)}
+      with_mapping(:basic_user, Spigot::Mapping::User.nested_array)
+
+      it 'handles a nested array of values' do
+        expect(subject.format.keys).to include('name', 'users', 'user_count')
+        expect(subject.format['users']).to be_a(Array)
+      end
+    end
+
     context 'with a namedspaced resource' do
       let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new, Spigot::ApiData.post)}
       with_mapping(:namespaced_post, Spigot::Mapping::Post.namespaced)
