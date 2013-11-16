@@ -22,7 +22,7 @@ This leaves you with a simple statement to accomplish the same as above:
 
     Pull.find_or_create_by_api(:github, pull)
 
-Much better.
+Much better. [Read More](https://github.com/mwerner/spigot/wiki)
 
 ## Example
 
