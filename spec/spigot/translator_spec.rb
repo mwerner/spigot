@@ -45,6 +45,18 @@ describe Spigot::Translator do
       end
     end
 
+    context 'with a symbol keyed map' do
+      let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.basic_user)}
+
+      context 'with a basic mapping' do
+        with_mapping(:basic_user, Spigot::Mapping::User.symbolized)
+
+        it 'reads one layer' do
+          expect(subject.format).to eq({'name' => 'Dean Martin', 'username' => 'classyasfuck'})
+        end
+      end
+    end
+
     context 'and a valid resource map' do
       with_mapping(:basic_user, Spigot::Mapping::User.basic)
 

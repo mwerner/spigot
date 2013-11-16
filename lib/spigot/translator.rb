@@ -1,4 +1,5 @@
 require 'yaml'
+require 'hashie'
 
 module Spigot
   class Translator
@@ -40,7 +41,7 @@ module Spigot
     # @param custom_map  [Hash] Optional hash that you can prefer to use over the correlated translation.
     # @param custom_data [Hash] Optional data that you can prefer to use over the @data currently on the object.
     def format(custom_map=nil, custom_data=nil)
-      map = custom_map || mapping
+      map     = Hashie::Mash.new(custom_map || mapping)
       dataset = custom_data || data
 
       if dataset.is_a?(Array)
@@ -98,7 +99,7 @@ module Spigot
     # Return a hash of the data map currently being used by this translator, including options.
     def mapping
       return @mapping if defined?(@mapping)
-      @mapping = translations[resource_key.to_s]
+      @mapping = translations[resource_key]
       raise MissingResourceError, "There is no #{resource_key} mapping for #{service}" if @mapping.nil?
       @mapping
     end
@@ -113,7 +114,7 @@ module Spigot
       else
         dataset.each_pair do |key, val|
           next if key == Spigot.config.options_key
-          attribute = map[key.to_s]
+          attribute = map[key]
           next if attribute.nil?
 
           result = attribute.is_a?(Hash) ? translate(attribute, val) : val
@@ -130,7 +131,7 @@ module Spigot
       elsif value.is_a?(Hash)
         value
       else
-        {map[key.to_s] => value}
+        {map[key] => value}
       end
     end
 
@@ -143,7 +144,7 @@ module Spigot
     end
 
     def translations
-      @translations ||= Spigot.config.translations || YAML.load(translation_file)
+      @translations ||= Hashie::Mash.new(Spigot.config.translations || YAML.load(translation_file))
     end
 
     def translation_file

@@ -6,6 +6,10 @@ module Spigot
         {'user' => base}
       end
 
+      def self.symbolized
+        {user: {full_name: 'name', login: 'username'}}
+      end
+
       def self.nested
         {'user' => base.merge('login' => {'email' => 'contact', 'user_name' => 'username'})}
       end
