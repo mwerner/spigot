@@ -32,7 +32,7 @@ Much better.
     end
 
     # Api Data Received
-    data = {"full_name":"Dean Martin","login":"dino@amore.io","token":"abc123"}
+    data = JSON.parse("{\"full_name\":\"Dean Martin\",\"login\":\"dino@amore.io\",\"token\":\"abc123\"}")
 
     # Spigot yaml file to map this data correctly
     user:
