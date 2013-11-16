@@ -24,6 +24,10 @@ module Spigot
         {'user' => {'account' => 'name', 'count' => 'user_count', 'users' => base}}
       end
 
+      def self.nested_account_members
+        {'activeuser' => {'account_name' => 'name', 'url' => 'url', 'members' => {'login' => 'email', 'full_name' => 'name'}}}
+      end
+
       def self.with_options
         {'user' => base.merge('spigot' => options)}
       end
