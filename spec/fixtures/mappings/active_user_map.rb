@@ -4,19 +4,19 @@ module Spigot
     class ActiveUser
 
       def self.basic
-        {'activeuser' => base}
+        {'active_user' => base}
       end
 
       def self.with_options
-        {'activeuser' => base.merge('spigot' => options)}
+        {'active_user' => base.merge('spigot' => options)}
       end
 
       def self.non_unique_key
-        {'activeuser' => base.merge('auth_token' => 'token', 'spigot' => non_unique)}
+        {'active_user' => base.merge('auth_token' => 'token', 'spigot' => non_unique)}
       end
 
       def self.with_invalid_options
-        {'activeuser' => base.merge('spigot' => invalid_options)}
+        {'active_user' => base.merge('spigot' => invalid_options)}
       end
 
       private

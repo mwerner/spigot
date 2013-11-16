@@ -140,7 +140,7 @@ module Spigot
     end
 
     def resource_key
-      resource.to_s.downcase.gsub('::', '/')
+      resource.to_s.underscore
     end
 
     def translations

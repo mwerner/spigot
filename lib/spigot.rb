@@ -1,5 +1,6 @@
 require "spigot/version"
 require "spigot/errors"
+require "spigot/patch"
 
 module Spigot
   autoload :Configuration, 'spigot/configuration'
