@@ -49,7 +49,7 @@ Much better. [Read More](https://github.com/mwerner/spigot/wiki)
 
 ## Future
 
-Some features I'd like to add in the future
+Features to be added in the future:
 
 - Callbacks
 - Interpolating values
