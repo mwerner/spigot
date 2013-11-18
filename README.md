@@ -47,6 +47,14 @@ Much better. [Read More](https://github.com/mwerner/spigot/wiki)
     User.find_or_create_by_api(:github, data).inspect
     #=> #<User id: 1, name: "Dean Martin", email: "dino@amore.io", token: "abc123">
 
+## Future
+
+Some features I'd like to add in the future
+
+- Callbacks
+- Interpolating values
+- Specifying local methods instead of attributes
+
 ## Installation
 
 Add this line to your application's Gemfile:
