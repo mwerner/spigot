@@ -45,7 +45,7 @@ Much better. [Read More](https://github.com/mwerner/spigot/wiki)
 
     # Usage
     User.find_or_create_by_api(:github, data).inspect
-    #=> #<User id: 1, name: "Dean Martin", email: "dino@amore.io", token: "abc123">
+    #=> #<User id: 1, name: "Dean Martin", email: "dino@amore.io", auth: "abc123">
 
 ## Future
 
