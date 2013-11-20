@@ -1,5 +1,36 @@
 require 'spigot'
 
+Spigot.define do
+  service :twitter do
+    resource :user do
+      id       :twitter_id
+      name     :name
+      username :username
+    end
+  end
+end
+
+Spigot.define do
+  service :github do
+    resource :user do
+      id        :github_id
+      full_name :name
+      login     :username
+      contact do
+        address   :address
+        telephone :phone
+        url :homepage do |value|
+          "https://github.com/#{value}"
+        end
+      end
+    end
+  end
+end
+
+
+
+
+
 Spigot.configure do |config|
   config.translations = {
     'user' => {
