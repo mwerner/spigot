@@ -12,6 +12,17 @@ Spigot.define do
   end
 end
 
+Spigot.define do
+  service :github do
+    resource :user do
+      login :username
+      href :url do |value|
+        "https://github.com/#{value}"
+      end
+    end
+  end
+end
+
 ActiveRecord::Base.logger = Spigot.logger
 require File.join(Spigot.root, 'spec', 'support', 'active_record')
 

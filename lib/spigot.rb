@@ -10,27 +10,24 @@ module Spigot
   autoload :Record,        'spigot/record'
   autoload :Translator,    'spigot/translator'
   module Map
-    autoload :Definition,    'spigot/map/definition'
-    autoload :Resource,      'spigot/map/resource'
-    autoload :Service,       'spigot/map/service'
+    autoload :Base,        'spigot/map/base'
+    autoload :Definition,  'spigot/map/definition'
+    autoload :Resource,    'spigot/map/resource'
+    autoload :Service,     'spigot/map/service'
   end
 
-  ##=> Definition
   def self.define(&block)
-    config.services = Spigot::Map::Service.class_eval(&block)
-  end
-
-  def self.services
-    config.services.dup
-  end
-
-  ##=> Configuration
-  def self.config
-    Configuration.instance
+    map = config.map || Spigot::Map::Base.new
+    map.update(&block)
+    config.map = map
   end
 
   def self.configure
     yield config
+  end
+
+  def self.config
+    Configuration.instance
   end
 
   ##=> Support
