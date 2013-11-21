@@ -1,6 +1,5 @@
 module Spigot
   module Mapping
-
     class ActiveUser
 
       def self.basic

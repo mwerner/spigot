@@ -5,19 +5,9 @@ Spigot.define do
   service :twitter do
     resource :tweet do
       login :username
-      href :url do |value|
-        "https://twitter.com/tweets/#{value}"
-      end
-    end
-  end
-end
-
-Spigot.define do
-  service :github do
-    resource :user do
-      login :username
-      href :url do |value|
-        "https://github.com/#{value}"
+      href  :url
+      spigot do
+        primary_key :username
       end
     end
   end

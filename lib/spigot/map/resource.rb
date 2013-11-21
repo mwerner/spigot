@@ -8,6 +8,21 @@ module Spigot
         instance_eval(&block) if block_given?
       end
 
+      def spigot(&block)
+        @options = Spigot::Map::Option.new(&block)
+      end
+
+      def to_hash
+        return @to_hash if defined?(@to_hash)
+        result = {}
+        @definitions.each do |definition|
+          key = definition.instance_variable_get(:@name)
+          val = definition.instance_variable_get(:@value)
+          result.merge!(key => val)
+        end
+        @to_hash = result
+      end
+
       # Spigot::Map::Resource.new(:user){ username :login }
       # Spigot::Map::Resource.new(:user){ username = :login }
       def method_missing(name, *args, &block)

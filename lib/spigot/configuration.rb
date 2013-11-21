@@ -4,11 +4,9 @@ module Spigot
   class Configuration
     include Singleton
 
-    attr_accessor :path, :translations, :options_key, :logger, :map
+    attr_accessor :options_key, :logger, :map
 
     @@defaults = {
-      path: 'config/spigot',
-      translations: nil,
       options_key: 'spigot',
       logger: nil,
       map: nil

@@ -22,6 +22,10 @@ module Spigot
         @@services << service
       end
 
+      def [](name)
+        resources.detect{|r| r.instance_variable_get(:@name).to_sym == name.to_sym}
+      end
+
       def resource(name, &block)
         resources << Spigot::Map::Resource.new(name, &block)
       end

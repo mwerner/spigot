@@ -12,9 +12,7 @@ module Spigot
     # in the yaml file for that resource.
     #
     # Relevant Configuration:
-    # config.options_key  => The key which the Translator uses to configure a resource mapping.
-    # config.path         => The path which the Translator will look in to find the mappings.
-    # config.translations => A hash that overrides any mappings found in the `path` directory.
+    # config.options_key  => The key which the Translator uses to configure a resource_map.
 
     attr_reader :service, :resource
     attr_accessor :data
@@ -41,7 +39,7 @@ module Spigot
     # @param custom_map  [Hash] Optional hash that you can prefer to use over the correlated translation.
     # @param custom_data [Hash] Optional data that you can prefer to use over the @data currently on the object.
     def format(custom_map=nil, custom_data=nil)
-      map     = Hashie::Mash.new(custom_map || mapping)
+      map     = Hashie::Mash.new(custom_map || resource_map.to_hash)
       dataset = custom_data || data
 
       if dataset.is_a?(Array)
@@ -78,33 +76,37 @@ module Spigot
     #   Default: nil
     #   Array of attributes included in the database query, these are names of columns in your database.
     def options
-      @options ||= mapping[Spigot.config.options_key] || {}
+      @options ||= resource_map.instance_variable_get(:@options)
     end
 
     def primary_key
-      options['primary_key'] || "#{service}_id"
+      options.primary_key || "#{service}_id"
     end
 
     def foreign_key
-      options['foreign_key'] || mapping.invert[primary_key] || 'id'
+      options.foreign_key || resource_map.to_hash.invert[primary_key] || 'id'
     end
 
     def conditions
       p_keys = [*(condition_keys.blank? ? primary_key : condition_keys)].map(&:to_s)
-      keys   = mapping.select{|k, v| p_keys.include?(v.to_s) }
+      keys   = resource_map.to_hash.select{|k, v| p_keys.include?(v.to_s) }
       format(keys)
     end
 
-    ## #mapping
-    # Return a hash of the data map currently being used by this translator, including options.
-    def mapping
-      return @mapping if defined?(@mapping)
-      @mapping = translations[resource_key]
-      raise MissingResourceError, "There is no #{resource_key} mapping for #{service}" if @mapping.nil?
-      @mapping
+    ## #resource_map
+    # Return the mapped resource object for the current service and resource_key
+    def resource_map
+      return @resource_map if defined?(@resource_map)
+      @resource_map = service_map[resource_key]
+      raise MissingResourceError, "There is no #{resource_key} resource_map for #{service}" if @resource_map.nil?
+      @resource_map
     end
 
     private
+
+    def service_map
+      Spigot.config.map ? Spigot.config.map.service(service) : {}
+    end
 
     def translate(map, dataset)
       formatted = {}
@@ -136,23 +138,11 @@ module Spigot
     end
 
     def condition_keys
-      options['conditions'].to_s.split(',').map(&:strip)
+      options.conditions.to_s.split(',').map(&:strip)
     end
 
     def resource_key
       resource.to_s.underscore
-    end
-
-    def translations
-      @translations ||= Hashie::Mash.new(Spigot.config.translations || YAML.load(translation_file))
-    end
-
-    def translation_file
-      begin
-        @translation_file ||= File.read(File.join(Spigot.config.path, "#{service.to_s}.yml"))
-      rescue Errno::ENOENT => e
-        raise MissingServiceError, "There is no service map for #{service} defined"
-      end
     end
 
   end

@@ -12,6 +12,7 @@ module Spigot
   module Map
     autoload :Base,        'spigot/map/base'
     autoload :Definition,  'spigot/map/definition'
+    autoload :Option,      'spigot/map/option'
     autoload :Resource,    'spigot/map/resource'
     autoload :Service,     'spigot/map/service'
   end

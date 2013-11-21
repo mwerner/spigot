@@ -1,14 +1,6 @@
 require 'spec_helper'
 
 describe Spigot::Configuration do
-  before do
-    @prior_translations = Spigot.config.translations
-  end
-
-  after do
-    Spigot.configure{|c| c.translations = @prior_translations }
-  end
-
   context 'defaults' do
     it 'is a hash of default configuration' do
       expect(Spigot::Configuration.defaults).to be_kind_of(Hash)
@@ -31,19 +23,8 @@ describe Spigot::Configuration do
     end
 
     context 'options' do
-      let(:path){'/baller'}
       let(:map){{'user' => {a: 1}}}
       let(:options_key){'my_special_key'}
-
-      it "is able to set the path" do
-        Spigot.configure{|config| config.path = path }
-        expect(Spigot.config.path).to eq(path)
-      end
-
-      it "is able to set translations" do
-        Spigot.configure{|config| config.translations = map }
-        expect(Spigot.config.translations).to eq(map)
-      end
 
       it "is able to set the options_key" do
         Spigot.configure{|config| config.options_key = options_key }

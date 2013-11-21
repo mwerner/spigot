@@ -9,6 +9,8 @@ require "mocha/setup"
   Dir[File.join(Spigot.root, "spec/#{dir}/**/*.rb")].each {|f| require f}
 end
 
+include MappingSupport
+
 # Mocked Classes
 User = Class.new(Hashie::Mash)
 
@@ -18,18 +20,6 @@ end
 
 module Wrapper
   Post = Class.new(Hashie::Mash)
-end
-
-def with_mapping(name, map)
-  before do
-    instance_variable_set("@prior_#{name}".to_sym, Spigot.config.translations)
-    Spigot.configure{|c| c.translations = map }
-  end
-
-  after do
-    map_cache = instance_variable_get("@prior_#{name}".to_sym)
-    Spigot.configure{|c| c.translations = map_cache }
-  end
 end
 
 RSpec.configure do |config|
