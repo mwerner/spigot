@@ -6,16 +6,18 @@ module Spigot
   autoload :ActiveRecord,  'spigot/active_record'
   autoload :Base,          'spigot/base'
   autoload :Configuration, 'spigot/configuration'
-  autoload :Definition,    'spigot/definition'
   autoload :Proxy,         'spigot/proxy'
   autoload :Record,        'spigot/record'
-  autoload :Resource,      'spigot/resource'
-  autoload :Service,       'spigot/service'
   autoload :Translator,    'spigot/translator'
+  module Map
+    autoload :Definition,    'spigot/map/definition'
+    autoload :Resource,      'spigot/map/resource'
+    autoload :Service,       'spigot/map/service'
+  end
 
   ##=> Definition
   def self.define(&block)
-    config.services = Spigot::Service.class_eval(&block)
+    config.services = Spigot::Map::Service.class_eval(&block)
   end
 
   def self.services
