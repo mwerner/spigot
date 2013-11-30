@@ -18,9 +18,7 @@ module Spigot
   end
 
   def self.define(&block)
-    map = config.map || Spigot::Map::Base.new
-    map.update(&block)
-    config.map = map
+    config.map = (config.map || Spigot::Map::Base.new).define(&block)
   end
 
   def self.configure

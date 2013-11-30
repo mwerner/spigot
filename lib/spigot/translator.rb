@@ -88,6 +88,7 @@ module Spigot
     end
 
     def conditions
+      puts condition_keys.inspect
       p_keys = [*(condition_keys.blank? ? primary_key : condition_keys)].map(&:to_s)
       keys   = resource_map.to_hash.select{|k, v| p_keys.include?(v.to_s) }
       format(keys)
@@ -138,6 +139,7 @@ module Spigot
     end
 
     def condition_keys
+      puts options.inspect
       options.conditions.to_s.split(',').map(&:strip)
     end
 

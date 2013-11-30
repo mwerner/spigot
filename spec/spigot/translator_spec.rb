@@ -22,162 +22,152 @@ describe Spigot::Translator do
     end
   end
 
-  context '#format' do
-    let(:subject){Spigot::Translator.new(:github, User.new, {a: '1'})}
+  # context '#format' do
+  #   let(:subject){Spigot::Translator.new(:github, User.new, {a: '1'})}
 
-    context 'with a missing map' do
-      it 'raises error with a missing file' do
-        expect {
-          subject.format
-        }.to raise_error(Spigot::MissingServiceError)
-      end
-    end
+  #   context 'with a missing resource map' do
+  #     it 'raises error with a missing resource map' do
+  #       expect{
+  #         subject.format
+  #       }.to raise_error(Spigot::MissingResourceError)
+  #     end
+  #   end
 
-    context 'with a missing resource map' do
-      before do
-        subject.stubs(:translation_file).returns("missing:\n  foo: 'bar'")
-      end
+  #   context 'with a symbol keyed map' do
+  #     let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.basic_user)}
 
-      it 'raises error with a missing resource map' do
-        expect{
-          subject.format
-        }.to raise_error(Spigot::MissingResourceError)
-      end
-    end
+  #     context 'with a basic mapping' do
+  #       before{ use_map(Spigot::Mapping::User.symbolized) }
 
-    context 'with a symbol keyed map' do
-      let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.basic_user)}
+  #       it 'reads one layer' do
+  #         expect(subject.format).to eq({'name' => 'Dean Martin', 'username' => 'classyasfuck'})
+  #       end
+  #     end
+  #   end
 
-      context 'with a basic mapping' do
-        with_mapping(:basic_user, Spigot::Mapping::User.symbolized)
+  #   context 'and a valid resource map' do
+  #     before{ use_map(Spigot::Mapping::User.basic) }
 
-        it 'reads one layer' do
-          expect(subject.format).to eq({'name' => 'Dean Martin', 'username' => 'classyasfuck'})
-        end
-      end
-    end
+  #     it 'returns empty hash from nil data' do
+  #       expect(subject.format).to eq({})
+  #     end
+  #   end
 
-    context 'and a valid resource map' do
-      with_mapping(:basic_user, Spigot::Mapping::User.basic)
+  #   context 'with basic user data' do
+  #     let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.basic_user)}
 
-      it 'returns empty hash from nil data' do
-        expect(subject.format).to eq({})
-      end
-    end
+  #     context 'with a basic mapping' do
+  #       before{ use_map(Spigot::Mapping::User.basic) }
 
-    context 'with basic user data' do
-      let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.basic_user)}
+  #       it 'reads one layer' do
+  #         expect(subject.format).to eq({'name' => 'Dean Martin', 'username' => 'classyasfuck'})
+  #       end
+  #     end
 
-      context 'with a basic mapping' do
-        with_mapping(:basic_user, Spigot::Mapping::User.basic)
+  #     context 'with a mapping containing nested data' do
+  #       let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.nested_user)}
+  #       before{ use_map(Spigot::Mapping::User.nested) }
 
-        it 'reads one layer' do
-          expect(subject.format).to eq({'name' => 'Dean Martin', 'username' => 'classyasfuck'})
-        end
-      end
+  #       it 'traverses into the nested hash' do
+  #         expect(subject.format).to eq({
+  #           'name' => 'Dean Martin',
+  #           'username' => 'classyasfuck',
+  #           'contact' => 'dino@amore.io'
+  #         })
+  #       end
 
-      context 'with a mapping containing nested data' do
-        let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.nested_user)}
-        with_mapping(:basic_user, Spigot::Mapping::User.nested)
+  #       context 'twice' do
+  #         before{ use_map(Spigot::Mapping::User.nested_twice) }
+  #         let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.double_nested_user)}
 
-        it 'traverses into the nested hash' do
-          expect(subject.format).to eq({
-            'name' => 'Dean Martin',
-            'username' => 'classyasfuck',
-            'contact' => 'dino@amore.io'
-          })
-        end
+  #         it 'traverses multiple levels' do
+  #           expect(subject.format.values).to include(*['Dean Martin','classyasfuck','dino@amore.io'])
+  #         end
+  #       end
+  #     end
+  #   end
 
-        context 'twice' do
-          with_mapping(:basic_user, Spigot::Mapping::User.nested_twice)
-          let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.double_nested_user)}
+  #   context 'with an array of values' do
+  #     let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.user_array)}
+  #     before{ use_map(Spigot::Mapping::User.basic) }
 
-          it 'traverses multiple levels' do
-            expect(subject.format.values).to include(*['Dean Martin','classyasfuck','dino@amore.io'])
-          end
-        end
-      end
-    end
+  #     it 'returns an array of formatted data' do
+  #       expect(subject.format.length).to eq(2)
+  #       expect(subject.format.map{|u| u['name']}).to include('Dean Martin', 'Frank Sinatra')
+  #     end
+  #   end
 
-    context 'with an array of values' do
-      let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.user_array)}
-      with_mapping(:basic_user, Spigot::Mapping::User.basic)
+  #   context 'with a nested array of values' do
+  #     let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.nested_user_array)}
+  #     before{ use_map(Spigot::Mapping::User.nested_array) }
 
-      it 'returns an array of formatted data' do
-        expect(subject.format.length).to eq(2)
-        expect(subject.format.map{|u| u['name']}).to include('Dean Martin', 'Frank Sinatra')
-      end
-    end
+  #     it 'handles a nested array of values' do
+  #       expect(subject.format.keys).to include('name', 'users', 'user_count')
+  #       expect(subject.format['users']).to be_a(Array)
+  #     end
+  #   end
 
-    context 'with a nested array of values' do
-      let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.nested_user_array)}
-      with_mapping(:basic_user, Spigot::Mapping::User.nested_array)
+  #   context 'with a namedspaced resource' do
+  #     let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new, Spigot::ApiData.post)}
+  #     before{ use_map(Spigot::Mapping::Post.namespaced) }
 
-      it 'handles a nested array of values' do
-        expect(subject.format.keys).to include('name', 'users', 'user_count')
-        expect(subject.format['users']).to be_a(Array)
-      end
-    end
+  #     it 'accesses the wrapper/post key' do
+  #       expect(subject.format).to eq({'title' => 'Regular Article', 'description' => 'dolor sit amet'})
+  #     end
+  #   end
+  # end
 
-    context 'with a namedspaced resource' do
-      let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new, Spigot::ApiData.post)}
-      with_mapping(:namespaced_post, Spigot::Mapping::Post.namespaced)
+  # context '#lookup' do
+  #   let(:subject){Spigot::Translator.new(:github, User.new, {a: '1'})}
 
-      it 'accesses the wrapper/post key' do
-        expect(subject.format).to eq({'title' => 'Regular Article', 'description' => 'dolor sit amet'})
-      end
-    end
-  end
+  #   it 'returns the value at a given key' do
+  #     subject.lookup(:a).should eq('1')
+  #   end
+  # end
 
-  context '#lookup' do
-    let(:subject){Spigot::Translator.new(:github, User.new, {a: '1'})}
+  # context '#id' do
+  #   let(:subject){Spigot::Translator.new(:github, User.new, {id: '123'})}
 
-    it 'returns the value at a given key' do
-      subject.lookup(:a).should eq('1')
-    end
-  end
+  #   it 'returns the value at the foreign_key' do
+  #     subject.stubs(:foreign_key).returns('id')
+  #     subject.id.should eq('123')
+  #   end
+  # end
 
-  context '#id' do
-    let(:subject){Spigot::Translator.new(:github, User.new, {id: '123'})}
+  # context '#conditions' do
+  #   let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.user)}
 
-    it 'returns the value at the foreign_key' do
-      subject.stubs(:foreign_key).returns('id')
-      subject.id.should eq('123')
-    end
-  end
+  #   context 'without conditions specified' do
+  #     before{ use_map(Spigot::Mapping::User.with_options) }
+  #     it 'should return a hash' do
+  #       subject.conditions.should eq({"username"=>"classyasfuck"})
+  #     end
+  #   end
 
-  context '#conditions' do
-    let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.user)}
-    with_mapping(:user_with_conditions, Spigot::Mapping::User.with_options)
+  #   context 'with conditions specified' do
+  #     use_map Spigot::Mapping::User.with_conditions
 
-    it 'should return a hash' do
-      previous_translations = Spigot.config.translations
-      Spigot.configure{|c| c.translations = Spigot::Mapping::User.with_options }
-      subject.conditions.should eq({"username"=>"classyasfuck"})
-      Spigot.configure{|c| c.translations = previous_translations }
-    end
+  #     it 'can specify the keys used in the map options' do
+  #       subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
+  #     end
 
-    context 'with conditions specified' do
-      with_mapping(:user_with_conditions, Spigot::Mapping::User.with_conditions)
-
-      it 'can specify the keys used in the map options' do
-        subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
-      end
-
-      it 'can specify only one key' do
-        subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
-      end
-    end
-  end
+  #     it 'can specify only one key' do
+  #       subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
+  #     end
+  #   end
+  # end
 
   context '#options' do
     let(:subject){Spigot::Translator.new(:github, User.new, {remote_id: '987'})}
+    before{ Spigot::Mapping::User.define_basic_map }
 
     context 'without options provided' do
-      with_mapping(:basic_user, Spigot::Mapping::User.basic)
-
       context 'defaults' do
         it '#primary_key is the name of the service _id' do
+          puts 'Start test'
+          puts subject.inspect
+          puts Spigot.config.map
+          # puts Spigot.config.map
           subject.primary_key.should eq('github_id')
         end
 
@@ -187,25 +177,25 @@ describe Spigot::Translator do
       end
     end
 
-    context 'with options provided' do
-      with_mapping(:user_with_options, Spigot::Mapping::User.with_options)
+  #   context 'with options provided' do
+  #     use_map(Spigot::Mapping::User.with_options)
 
-      it 'reads the options from the spigot key' do
-        subject.options.should eq(Spigot::Mapping::User.with_options['user']['spigot'])
-      end
+  #     it 'reads the options from the spigot key' do
+  #       subject.options.should eq(Spigot::Mapping::User.with_options['user']['spigot'])
+  #     end
 
-      context '#primary_key' do
-        it 'reads a primary key from the mapping' do
-          subject.primary_key.should eq('username')
-        end
-      end
+  #     context '#primary_key' do
+  #       it 'reads a primary key from the mapping' do
+  #         subject.primary_key.should eq('username')
+  #       end
+  #     end
 
-      context '#foreign_key' do
-        it 'reads a foreign key from the mapping' do
-          subject.foreign_key.should eq('login')
-        end
-      end
-    end
+  #     context '#foreign_key' do
+  #       it 'reads a foreign key from the mapping' do
+  #         subject.foreign_key.should eq('login')
+  #       end
+  #     end
+  #   end
   end
 
 end

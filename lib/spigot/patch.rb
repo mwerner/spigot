@@ -1,6 +1,6 @@
 class String
   # Don't really like patching string here,
-  # but it's too clean not to.
+  # but it's fine for now.
   def underscore
     self.gsub(/::/, '/').
     gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').

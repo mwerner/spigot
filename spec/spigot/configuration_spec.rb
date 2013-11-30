@@ -8,14 +8,6 @@ describe Spigot::Configuration do
   end
 
   context 'access' do
-    before do
-      @previous_path = Spigot.config.path
-    end
-
-    after do
-      Spigot.configure{|config| config.path = @previous_path }
-    end
-
     it "is callable from .configure" do
       Spigot.configure do |c|
         expect(c).to be_kind_of(Spigot::Configuration)

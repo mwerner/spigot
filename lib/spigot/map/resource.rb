@@ -5,7 +5,7 @@ module Spigot
       def initialize(name, &block)
         @name = name
         @definitions = []
-        instance_eval(&block) if block_given?
+        self.instance_eval(&block) if block_given?
       end
 
       def spigot(&block)
