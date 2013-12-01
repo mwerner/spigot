@@ -21,7 +21,6 @@ module Spigot
     end
 
     def reset
-      map.reset if map
       @@defaults.each_pair{|k,v| self.send("#{k}=",v)}
     end
   end

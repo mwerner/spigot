@@ -50,6 +50,7 @@ describe Spigot::ActiveRecord do
       end
     end
   end
+
   #   context '#update_by_api' do
   #     before{ user }
   #     it 'updates a record' do

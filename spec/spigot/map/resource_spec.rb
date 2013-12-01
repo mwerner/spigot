@@ -15,20 +15,17 @@ describe Spigot::Map::Resource do
     end
 
     it 'builds definitions included in block' do
-      Spigot::Map::Resource.any_instance.should_receive(:define).with(:username, :login)
+      Spigot::Map::Definition.should_receive(:define)
       subject #=> Evaluate the let statement
     end
   end
 
-  context '.define' do
-    it 'builds a definition' do
-      subject.send(:define, :name, 'username')
-      subject.instance_variable_get(:@definitions).length.should eq(2)
-    end
-  end
-
   context '#method_missing' do
-    before{ subject.should_receive(:define).with(:username, :login) }
+    before do
+      subject
+      Spigot::Map::Definition.should_receive(:define)
+    end
+
     it 'builds a definition for missing methods' do
       subject.username :login
     end

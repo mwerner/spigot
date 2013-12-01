@@ -43,7 +43,7 @@ module Spigot
       dataset = custom_data || data
 
       if dataset.is_a?(Array)
-        dataset.map{|n| translate(map, n) }
+        dataset.map{|element| translate(map, element) }
       elsif dataset.is_a?(Hash)
         translate(map, dataset)
       end

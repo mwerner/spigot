@@ -2,6 +2,17 @@ module Spigot
   module Mapping
     class ActiveUser
 
+      def self.stub
+        Spigot.define do
+          service :github do
+            resource :active_user do
+              login :username
+              full_name :name
+            end
+          end
+        end
+      end
+
       def self.basic
         {'active_user' => base}
       end

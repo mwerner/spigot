@@ -14,6 +14,7 @@ module Spigot
     # @param service [String] This is the service that dictates the proxy.
     # @param resource [Object] This is the class implementing the proxy.
     def initialize(service, resource)
+      raise MissingServiceError, "No service definition found for #{service}" if Spigot.config.map.service(service).nil?
       @service  = service
       @resource = resource
     end
@@ -27,13 +28,13 @@ module Spigot
     ## #map
     # Return a hash of the data map the current translator is using
     def map
-      translator.mapping.reject{|k,v| k == 'spigot'}
+      translator.resource_map.reject{|k,v| k == 'spigot'}
     end
 
     ## #options
     # Return a hash of any service specific options for this translator. `Spigot.config` not included
     def options
-      translator.mapping['spigot'] || {}
+      translator.resource_map['spigot'] || {}
     end
 
   end

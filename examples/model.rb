@@ -18,11 +18,20 @@ Spigot.define do
       login     :username
       contact do
         address   :address
-        telephone :phone
+        telephone do
+          work :work_phone
+          home :home_phone
+        end
         url :homepage do |value|
           "https://github.com/#{value}"
         end
       end
+    end
+
+    resource :pull_request do
+      id        :id
+      title     :title
+      body      :body
     end
   end
 end

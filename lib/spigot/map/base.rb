@@ -29,13 +29,15 @@ module Spigot
       def to_hash
         hash = {};
         services.each do |service|
-          hash.merge!(service.name.to_sym => service.resources.map{|r| r.instance_variable_get(:@name) })
+          service_map = {}
+          service.resources.each{|resource| service_map.merge!(resource.to_hash) }
+          hash.merge!(service.name.to_sym => service_map)
         end
         hash
       end
 
       def inspect
-        "#<Spigot::Map::Base #{to_hash.to_s}"
+        "#<Spigot::Map::Base #{to_hash.to_s}>"
       end
     end
   end
