@@ -43,6 +43,30 @@ module Spigot
         end
       end
 
+      def self.with_options
+        template do
+          full_name :name
+          login     :username
+          options do
+            primary_key :username
+            foreign_key :login
+          end
+        end
+      end
+
+      def self.with_conditions
+        template do
+          full_name :name
+          login     :username
+          options do
+            conditions do
+              primary_key :username
+              foreign_key :login
+            end
+          end
+        end
+      end
+
       private
 
       def self.template(&block)

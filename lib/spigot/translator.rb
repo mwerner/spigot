@@ -33,7 +33,7 @@ module Spigot
       @data = data || {}
     end
 
-    ## #format(custom_map)
+    ## #format
     # Formats the hash of data passed in to the format specified in the yaml file.
     def format
       data.is_a?(Array) ? data.map{|el| parse(el) } : parse(data)
@@ -80,7 +80,7 @@ module Spigot
     def conditions
       p_keys = [*(condition_keys.blank? ? primary_key : condition_keys)].map(&:to_s)
       keys   = resource_map.to_hash.select{|k, v| p_keys.include?(v.to_s) }
-      format(keys)
+      format
     end
 
     ## #resource_map

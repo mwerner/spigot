@@ -1,22 +1,22 @@
 module Spigot
   module Mapping
-
     class Post
 
+
       def self.basic
-        {'post' => base}
+
+        Spigot.define do
+          service :github do
+            resource 'wrapper/post' do
+              title :title
+              body :description
+            end
+          end
+        end
+
       end
 
-      def self.namespaced
-        {'wrapper/post' => base}
-      end
 
-      private
-
-      def self.base
-        {'title' => 'title', 'body' => 'description'}
-      end
     end
-
   end
 end

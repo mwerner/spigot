@@ -112,87 +112,79 @@ describe Spigot::Translator do
         end
       end
 
+      context 'with a namedspaced resource' do
+        let(:data){ Spigot::Data::Post.basic }
+        let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new, data)}
+        before{ Spigot::Mapping::Post.basic }
+
+        it 'accesses the wrapper/post key' do
+          subject.format.should eq({
+            title: 'Brief Article',
+            description: 'lorem ipsum'
+          })
+        end
+      end
     end
   end
 
-  # context '#format' do
+  context '#lookup' do
+    let(:subject){Spigot::Translator.new(:github, User.new, {a: '1'})}
 
-  #   context 'with a namedspaced resource' do
-  #     let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new, Spigot::ApiData.post)}
-  #     before{ use_map(Spigot::Mapping::Post.namespaced) }
-
-  #     it 'accesses the wrapper/post key' do
-  #       expect(subject.format).to eq({'title' => 'Regular Article', 'description' => 'dolor sit amet'})
-  #     end
-  #   end
-  # end
-
-  # context '#lookup' do
-  #   let(:subject){Spigot::Translator.new(:github, User.new, {a: '1'})}
-
-  #   it 'returns the value at a given key' do
-  #     subject.lookup(:a).should eq('1')
-  #   end
-  # end
-
-  # context '#conditions' do
-  #   let(:subject){Spigot::Translator.new(:github, User.new, Spigot::ApiData.user)}
-
-  #   context 'without conditions specified' do
-  #     before{ use_map(Spigot::Mapping::User.with_options) }
-  #     it 'should return a hash' do
-  #       subject.conditions.should eq({"username"=>"classyasfuck"})
-  #     end
-  #   end
-
-  #   context 'with conditions specified' do
-  #     use_map Spigot::Mapping::User.with_conditions
-
-  #     it 'can specify the keys used in the map options' do
-  #       subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
-  #     end
-
-  #     it 'can specify only one key' do
-  #       subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
-  #     end
-  #   end
-  # end
-
-  context '#options' do
-    # let(:subject){Spigot::Translator.new(:github, User.new, {remote_id: '987'})}
-    # before{ Spigot::Mapping::ActiveUser.stub }
-
-    # context 'without options provided' do
-    #   context 'defaults' do
-    #     it '#primary_key is the name of the service _id' do
-    #       subject.primary_key.should eq('github_id')
-    #     end
-
-    #     it '#foreign_key is id' do
-    #       subject.foreign_key.should eq('id')
-    #     end
-    #   end
-    # end
-
-  #   context 'with options provided' do
-  #     use_map(Spigot::Mapping::User.with_options)
-
-  #     it 'reads the options from the spigot key' do
-  #       subject.options.should eq(Spigot::Mapping::User.with_options['user']['spigot'])
-  #     end
-
-  #     context '#primary_key' do
-  #       it 'reads a primary key from the mapping' do
-  #         subject.primary_key.should eq('username')
-  #       end
-  #     end
-
-  #     context '#foreign_key' do
-  #       it 'reads a foreign key from the mapping' do
-  #         subject.foreign_key.should eq('login')
-  #       end
-  #     end
-  #   end
+    it 'returns the value at a given key' do
+      subject.lookup(:a).should eq('1')
+    end
   end
 
+  context '#conditions' do
+    let(:data){ Spigot::Data::User.basic }
+    let(:subject){Spigot::Translator.new(:github, User.new, data)}
+
+    context 'without conditions specified' do
+      before{ Spigot::Mapping::User.basic }
+      it 'should return a hash' do
+        subject.conditions.should eq({"username"=>"classyasfuck"})
+      end
+    end
+
+    context 'with conditions specified' do
+      before{ Spigot::Mapping::User.with_conditions }
+      it 'can specify the keys used in the map options' do
+        subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
+      end
+
+      it 'can specify only one key' do
+        subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
+      end
+    end
+  end
+
+  context '#options' do
+    let(:subject){ Spigot::Translator.new(:github, User.new, {remote_id: '987'}) }
+
+    context 'without options provided' do
+      before{ Spigot::Mapping::User.basic }
+      it '#primary_key is the name of the service_id' do
+        subject.primary_key.should eq('github_id')
+      end
+
+      it '#foreign_key is id' do
+        subject.foreign_key.should eq('id')
+      end
+    end
+
+    context 'with options provided' do
+      before{ Spigot::Mapping::User.with_options }
+      it 'reads a primary key from the mapping' do
+        subject.primary_key.should eq(:username)
+      end
+
+      it 'reads a foreign key from the mapping' do
+        subject.foreign_key.should eq(:login)
+      end
+
+      it 'reads options' do
+        subject.options.should be_a_kind_of(Spigot::Map::Option)
+      end
+    end
+  end
 end
