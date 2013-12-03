@@ -16,6 +16,19 @@ module Spigot
         definition
       end
 
+      def parse(data)
+        data.default_proc = proc{|h, k| h.key?(k.to_s) ? h[k.to_s] : nil}
+        if @children.empty?
+          return { @value.to_sym => data[@name] }
+        end
+
+        child_hash = {}
+        @children.each do |child|
+          child_hash.merge!(child.parse(data[@name]))
+        end
+        child_hash
+      end
+
       def to_hash
         result = {}; value = nil
         if @children.any?

@@ -7,7 +7,7 @@ module Spigot
     attr_accessor :options_key, :logger, :map
 
     @@defaults = {
-      options_key: 'spigot',
+      options_key: 'options',
       logger: nil,
       map: nil
     }

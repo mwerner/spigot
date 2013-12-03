@@ -9,8 +9,6 @@ require "mocha/setup"
   Dir[File.join(Spigot.root, "spec/#{dir}/**/*.rb")].each {|f| require f}
 end
 
-include MappingSupport
-
 # Mocked Classes
 User = Class.new(Hashie::Mash)
 

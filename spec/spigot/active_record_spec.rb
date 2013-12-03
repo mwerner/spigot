@@ -3,21 +3,19 @@ require 'spec_helper'
 describe Spigot::ActiveRecord do
   let(:subject){ActiveUser}
   let(:service){:github}
-  let(:data){ Spigot::ApiData.user.merge(id: '987') }
+  let(:data){ Spigot::Data::ActiveUser.basic.merge(id: '987') }
+  let(:user){ subject.create(name: 'Dean Martin', username: 'classyasfuck') }
 
   context 'with invalid mapping' do
-    context '#find_by_api' do
-      it 'requires the primary key to be accurate' do
-        expect {
-          subject.find_by_api(service, {full_name: 'Dean Martin'}).should_not be_nil
-        }.to raise_error(Spigot::MissingResourceError)
-      end
+    it 'requires the primary key to be accurate' do
+      expect {
+        subject.find_by_api(service, {full_name: 'Dean Martin'}).should_not be_nil
+      }.to raise_error(Spigot::MissingResourceError)
     end
   end
 
   context 'with valid mapping' do
-    let(:user){ subject.create(name: 'Dean Martin', username: 'classyasfuck') }
-    before{ use_map(Spigot::Mapping::ActiveUser.with_options) }
+    before{ Spigot::Mapping::ActiveUser.stub }
 
     context '#find_by_api' do
       before{ user }
@@ -29,8 +27,6 @@ describe Spigot::ActiveRecord do
 
     context '#find_all_by_api' do
       before do
-        use_map(Spigot::Mapping::ActiveUser.non_unique_key)
-        puts Spigot.config.map.inspect
         user.update_attribute(:token, '123abc')
         subject.create(name: 'Frank Sinatra', username: 'livetilidie', token: '123abc')
       end

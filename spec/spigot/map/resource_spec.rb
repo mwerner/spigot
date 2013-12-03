@@ -50,7 +50,7 @@ describe Spigot::Map::Resource do
     end
 
     it 'returns the resource values' do
-      subject.to_hash[:username].should eq(:login)
+      subject.to_hash[:user][:username].should eq(:login)
     end
   end
 

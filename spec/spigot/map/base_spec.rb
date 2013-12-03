@@ -63,7 +63,7 @@ describe Spigot::Map::Base do
   context '.to_hash' do
     it 'returns a hash of current services' do
       subject.update(:github, service)
-      subject.to_hash.should eq({github: []})
+      subject.to_hash.should eq({github: {}})
     end
   end
 

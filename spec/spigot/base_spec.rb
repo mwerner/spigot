@@ -20,7 +20,6 @@ describe Spigot::Base do
     it 'returns formatted data' do
       Spigot::Translator.any_instance.should_receive(:format)
       formatted = ActiveUser.formatted_api_data(:github, data)
-      formatted.should eq({})
     end
   end
 

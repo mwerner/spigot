@@ -3,7 +3,7 @@ module Spigot
     class User
       class << self
         def basic
-          {'full_name' => 'Dean Martin', 'login' => 'classyasfuck'}
+          {'id' => '123', 'full_name' => 'Dean Martin', 'login' => 'classyasfuck'}
         end
 
         def alt
@@ -27,7 +27,7 @@ module Spigot
         end
 
         def double_nested
-          full.merge('login' => {'contact' => login_info})
+          full.merge('login' => {'contact' => login_info, 'last_seen_ip' => '127.0.0.1'})
         end
 
         private

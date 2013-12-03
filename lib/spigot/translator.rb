@@ -38,16 +38,47 @@ module Spigot
     #
     # @param custom_map  [Hash] Optional hash that you can prefer to use over the correlated translation.
     # @param custom_data [Hash] Optional data that you can prefer to use over the @data currently on the object.
-    def format(custom_map=nil, custom_data=nil)
-      map     = Hashie::Mash.new(custom_map || resource_map.to_hash)
-      dataset = custom_data || data
-
-      if dataset.is_a?(Array)
-        dataset.map{|element| translate(map, element) }
-      elsif dataset.is_a?(Hash)
-        translate(map, dataset)
+    def format
+      formatted = {}
+      resource_map.definitions.each do |rule|
+        result = rule.parse(data)
+        formatted.merge!(result)
       end
+      formatted
+
+      # map     = Hashie::Mash.new(custom_map || resource_map.to_hash)
+      # dataset = custom_data || data
+
+      # puts dataset.inspect
+      # puts resource_map.inspect
+
+
+
+      # if dataset.is_a?(Array)
+      #   dataset.map{|element| translate(map, element) }
+      # elsif dataset.is_a?(Hash)
+      #   translate(map, dataset)
+      # end
     end
+
+    # def translate(map, dataset)
+    #   formatted = {}
+
+    #   if dataset.is_a?(Array)
+    #     return dataset.map{|element| translate(map, element)}
+    #   else
+    #     dataset.each_pair do |key, val|
+    #       next if key == Spigot.config.options_key
+    #       attribute = map[key]
+    #       next if attribute.nil?
+
+    #       result = attribute.is_a?(Hash) ? translate(attribute, val) : val
+    #       formatted.merge! mergeable_content(key, result, map)
+    #     end
+    #   end
+
+    #   formatted
+    # end
 
     ## #id
     # The value at the foreign_key attribute specified in the resource options, defaults to 'id'.
@@ -109,25 +140,6 @@ module Spigot
       Spigot.config.map ? Spigot.config.map.service(service) : {}
     end
 
-    def translate(map, dataset)
-      formatted = {}
-
-      if dataset.is_a?(Array)
-        return dataset.map{|element| translate(map, element)}
-      else
-        dataset.each_pair do |key, val|
-          next if key == Spigot.config.options_key
-          attribute = map[key]
-          next if attribute.nil?
-
-          result = attribute.is_a?(Hash) ? translate(attribute, val) : val
-          formatted.merge! mergeable_content(key, result, map)
-        end
-      end
-
-      formatted
-    end
-
     def mergeable_content(key, value, map)
       if value.is_a?(Array)
         {key.to_s => value}
@@ -139,7 +151,6 @@ module Spigot
     end
 
     def condition_keys
-      puts options.inspect
       options.conditions.to_s.split(',').map(&:strip)
     end
 

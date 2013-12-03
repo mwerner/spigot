@@ -13,6 +13,21 @@ module Spigot
         end
       end
 
+      def self.with_options
+        Spigot.define do
+          service :github do
+            resource :active_user do
+              login :username
+              full_name :name
+              options do
+                primary_key :specific_id
+                foreign_key :remote_id
+              end
+            end
+          end
+        end
+      end
+
       def self.basic
         {'active_user' => base}
       end

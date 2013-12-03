@@ -2,9 +2,12 @@ module Spigot
   module Map
     class Resource
 
+      attr_reader :definitions
+
       def initialize(name, &block)
         @name = name.to_s.underscore.to_sym
         @definitions = []
+        @options = Spigot::Map::Option.new
         self.instance_eval(&block) if block_given?
       end
 
