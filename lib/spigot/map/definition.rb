@@ -17,16 +17,20 @@ module Spigot
       end
 
       def parse(data)
-        data.default_proc = proc{|h, k| h.key?(k.to_s) ? h[k.to_s] : nil}
+        data.default_proc = proc{|h, k| h.key?(k.to_s) ? h[k.to_s] : nil} if data.is_a?(Hash)
         if @children.empty?
           return { @value.to_sym => data[@name] }
         end
 
-        child_hash = {}
-        @children.each do |child|
-          child_hash.merge!(child.parse(data[@name]))
+        if data[@name].is_a?(Array)
+          set = []
+          data[@name].each do |element|
+            set << parse_children(element)
+          end
+          { @name.to_sym => set }
+        else
+          parse_children(data[@name])
         end
-        child_hash
       end
 
       def to_hash
@@ -48,6 +52,15 @@ module Spigot
         @children << Spigot::Map::Definition.new(name, *args, &block)
       end
 
+      private
+
+      def parse_children(data)
+        child_hash = {}
+        @children.each do |child|
+          child_hash.merge!(child.parse(data))
+        end
+        child_hash
+      end
     end
   end
 end

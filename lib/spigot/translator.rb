@@ -35,50 +35,9 @@ module Spigot
 
     ## #format(custom_map)
     # Formats the hash of data passed in to the format specified in the yaml file.
-    #
-    # @param custom_map  [Hash] Optional hash that you can prefer to use over the correlated translation.
-    # @param custom_data [Hash] Optional data that you can prefer to use over the @data currently on the object.
     def format
-      formatted = {}
-      resource_map.definitions.each do |rule|
-        result = rule.parse(data)
-        formatted.merge!(result)
-      end
-      formatted
-
-      # map     = Hashie::Mash.new(custom_map || resource_map.to_hash)
-      # dataset = custom_data || data
-
-      # puts dataset.inspect
-      # puts resource_map.inspect
-
-
-
-      # if dataset.is_a?(Array)
-      #   dataset.map{|element| translate(map, element) }
-      # elsif dataset.is_a?(Hash)
-      #   translate(map, dataset)
-      # end
+      data.is_a?(Array) ? data.map{|el| parse(el) } : parse(data)
     end
-
-    # def translate(map, dataset)
-    #   formatted = {}
-
-    #   if dataset.is_a?(Array)
-    #     return dataset.map{|element| translate(map, element)}
-    #   else
-    #     dataset.each_pair do |key, val|
-    #       next if key == Spigot.config.options_key
-    #       attribute = map[key]
-    #       next if attribute.nil?
-
-    #       result = attribute.is_a?(Hash) ? translate(attribute, val) : val
-    #       formatted.merge! mergeable_content(key, result, map)
-    #     end
-    #   end
-
-    #   formatted
-    # end
 
     ## #id
     # The value at the foreign_key attribute specified in the resource options, defaults to 'id'.
@@ -119,7 +78,6 @@ module Spigot
     end
 
     def conditions
-      puts condition_keys.inspect
       p_keys = [*(condition_keys.blank? ? primary_key : condition_keys)].map(&:to_s)
       keys   = resource_map.to_hash.select{|k, v| p_keys.include?(v.to_s) }
       format(keys)
@@ -135,6 +93,15 @@ module Spigot
     end
 
     private
+
+    def parse(dataset)
+      formatted = {}
+      resource_map.definitions.each do |rule|
+        result = rule.parse(dataset)
+        formatted.merge!(result)
+      end
+      formatted
+    end
 
     def service_map
       Spigot.config.map ? Spigot.config.map.service(service) : {}

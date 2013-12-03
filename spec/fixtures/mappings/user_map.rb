@@ -32,6 +32,17 @@ module Spigot
         end
       end
 
+      def self.nested_array
+        template do
+          account :name
+          count   :user_count
+          users do
+            full_name :name
+            login :username
+          end
+        end
+      end
+
       private
 
       def self.template(&block)
