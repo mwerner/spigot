@@ -4,7 +4,11 @@ module Spigot
       class << self
 
         def basic
-          {active_user: {'full_name' => 'Dean Martin', 'login' => 'classyasfuck'} }
+          {full_name: 'Dean Martin', login: 'classyasfuck', auth_token: '123abc'}
+        end
+
+        def alt
+          {full_name: 'Frank Sinatra', login: 'livetilidie', auth_token: '987zyx'}
         end
 
       end

@@ -142,18 +142,18 @@ describe Spigot::Translator do
     context 'without conditions specified' do
       before{ Spigot::Mapping::User.basic }
       it 'should return a hash' do
-        subject.conditions.should eq({"username"=>"classyasfuck"})
+        subject.conditions.should eq({'github_id' => nil})
       end
     end
 
     context 'with conditions specified' do
       before{ Spigot::Mapping::User.with_conditions }
       it 'can specify the keys used in the map options' do
-        subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
+        subject.conditions.should eq({username: "classyasfuck"})
       end
 
       it 'can specify only one key' do
-        subject.conditions.should eq({"username"=>"classyasfuck", "name"=>"Dean Martin"})
+        subject.conditions.should eq({username: "classyasfuck"})
       end
     end
   end

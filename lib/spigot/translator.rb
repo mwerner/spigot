@@ -36,7 +36,7 @@ module Spigot
     ## #format
     # Formats the hash of data passed in to the format specified in the yaml file.
     def format
-      data.is_a?(Array) ? data.map{|el| parse(el) } : parse(data)
+      @format ||= data.is_a?(Array) ? data.map{|el| parse(el) } : parse(data)
     end
 
     ## #id
@@ -74,19 +74,18 @@ module Spigot
     end
 
     def foreign_key
-      options.foreign_key || resource_map.to_hash.invert[primary_key] || 'id'
+      options.foreign_key || 'id'
     end
 
     def conditions
-      p_keys = [*(condition_keys.blank? ? primary_key : condition_keys)].map(&:to_s)
-      keys   = resource_map.to_hash.select{|k, v| p_keys.include?(v.to_s) }
-      format
+      {primary_key => format[primary_key]}
     end
 
     ## #resource_map
-    # Return the mapped resource object for the current service and resource_key
+    # Return the mapped resource object for the current service and resource
     def resource_map
       return @resource_map if defined?(@resource_map)
+      resource_key = resource.to_s.underscore
       @resource_map = service_map[resource_key]
       raise MissingResourceError, "There is no #{resource_key} resource_map for #{service}" if @resource_map.nil?
       @resource_map
@@ -105,24 +104,6 @@ module Spigot
 
     def service_map
       Spigot.config.map ? Spigot.config.map.service(service) : {}
-    end
-
-    def mergeable_content(key, value, map)
-      if value.is_a?(Array)
-        {key.to_s => value}
-      elsif value.is_a?(Hash)
-        value
-      else
-        {map[key] => value}
-      end
-    end
-
-    def condition_keys
-      options.conditions.to_s.split(',').map(&:strip)
-    end
-
-    def resource_key
-      resource.to_s.underscore
     end
 
   end

@@ -3,7 +3,7 @@ require 'spigot'
 
 Spigot.define do
   service :github do
-    resource :user do
+    resource :active_user do
       id        :github_id
       full_name :name
       login     :username
