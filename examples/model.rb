@@ -56,6 +56,10 @@ class User
   end
 end
 
+puts "Map Built:"
+puts Spigot.config.map.to_hash
+
 user = User.build
+puts "\nUser Parsed:"
 puts user.name
 puts user.inspect
