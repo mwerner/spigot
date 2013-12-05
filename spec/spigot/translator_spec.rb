@@ -124,6 +124,24 @@ describe Spigot::Translator do
           })
         end
       end
+
+      context 'with an interpolated value' do
+        let(:data){ Spigot::Data::User.basic }
+        let(:subject){ Spigot::Translator.new(:github, User.new, data) }
+        before{ Spigot::Mapping::User.interpolated }
+        it 'reads one layer' do
+          expect(subject.format).to eq({name: 'Dean Martin', username: '@classyasfuck'})
+        end
+      end
+
+      context 'with a nested interpolated value' do
+        let(:data){ Spigot::Data::User.nested }
+        let(:subject){ Spigot::Translator.new(:github, User.new, data) }
+        before{ Spigot::Mapping::User.nested_interpolation }
+        it 'reads one layer' do
+          expect(subject.format).to eq({name: 'Dean Martin', contact: 'dino@amore.io', username: '@classyasfuck'})
+        end
+      end
     end
   end
 

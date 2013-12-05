@@ -7,21 +7,21 @@ Spigot is an attempt to bring some sanity to consuming external API data. Withou
 to do this manual mapping at creation, such as:
 
     Pull.where(number: pull.number).first_or_initialize.tap do |t|
-      t.title      = pull.title
-      t.body       = pull.body
-      t.url        = pull._links.html.href
-      t.head_ref   = pull.head.ref
-      t.head_sha   = pull.head.sha
-      t.base_ref   = pull.base.ref
-      t.base_sha   = pull.base.sha
+      head, base = pull['head'], pull['base']
+      links = pull._links
+      t.title      = pull['title']
+      t.body       = pull['body']
+      t.url        = links.html.href
+      t.head_ref   = head['ref']
+      t.head_sha   = head['sha']
+      t.base_ref   = base['ref']
+      t.base_sha   = base['sha']
       t.save
     end
 
-Spigot reads config files in an expected format to map the data you receive to the columns of your database.
-This becomes particularly difficult as you start having multiple sources for the same resource (ex: users).
-
-Spigot is able to do the translation for you and put the API data into a language your implementation understands.
-This leaves you with a simple statement to accomplish the same as above:
+This becomes particularly difficult as you start having multiple external sources for the same resource (ex: users from twitter and facebook).
+Spigot uses a ruby api to map the data you receive to the columns of your database. As a result, you're
+able to convey a mapping of their structure into your attributes in a concise format. Afterwards, you can accomplish the above work in a simple statement:
 
     Pull.find_or_create_by_api(:github, pull)
 
@@ -37,11 +37,14 @@ Much better. [Read More](https://github.com/mwerner/spigot/wiki)
     # Api Data Received
     data = JSON.parse("{\"full_name\":\"Dean Martin\",\"login\":\"dino@amore.io\",\"token\":\"abc123\"}")
 
-    # Spigot yaml file to map this data correctly
-    user:
-      full_name: name
-      login: email
-      token: auth
+    # Spigot configuration
+    Spigot.define do
+      resource :user do
+        full_name :name
+        login :email
+        token :auth
+      end
+    end
 
     # Usage
     User.find_or_create_by_api(:github, data).inspect
@@ -52,7 +55,6 @@ Much better. [Read More](https://github.com/mwerner/spigot/wiki)
 Features to be added in the future:
 
 - Callbacks
-- Interpolating values
 - Specifying local methods instead of attributes
 
 ## Installation

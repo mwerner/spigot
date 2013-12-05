@@ -19,7 +19,8 @@ module Spigot
       def parse(data)
         data.default_proc = proc{|h, k| h.key?(k.to_s) ? h[k.to_s] : nil} if data.is_a?(Hash)
         if @children.empty?
-          return { @value.to_sym => data[@name] }
+          value = @parse ? @parse.call(data[@name]) : data[@name]
+          return { @value.to_sym => value }
         end
 
         if data[@name].is_a?(Array)

@@ -9,6 +9,27 @@ module Spigot
         end
       end
 
+      def self.interpolated
+        template do
+          full_name :name
+          login :username do |value|
+            "@#{value}"
+          end
+        end
+      end
+
+      def self.nested_interpolation
+        template do
+          full_name :name
+          login do
+            email      :contact
+            user_name  :username do |value|
+              "@#{value}"
+            end
+          end
+        end
+      end
+
       def self.nested
         template do
           full_name :name
