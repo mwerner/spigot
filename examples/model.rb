@@ -36,19 +36,6 @@ Spigot.define do
   end
 end
 
-
-
-
-
-Spigot.configure do |config|
-  config.translations = {
-    'user' => {
-      'full_name' => 'name',
-      'login' => 'username'
-    }
-  }
-end
-
 class User
   include Spigot::Base
 

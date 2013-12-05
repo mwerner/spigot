@@ -28,13 +28,13 @@ module Spigot
     ## #map
     # Return a hash of the data map the current translator is using
     def map
-      translator.resource_map.reject{|k,v| k == 'spigot'}
+      translator.resource_map
     end
 
     ## #options
     # Return a hash of any service specific options for this translator. `Spigot.config` not included
     def options
-      translator.resource_map['spigot'] || {}
+      translator.options || {}
     end
 
   end
