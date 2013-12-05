@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Spigot by mwerner</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Spigot</h1>
+        <p>Spigot provides a clean interface translating API data into context relevant objects</p>
+
+        <p class="view"><a href="https://github.com/mwerner/spigot">View the Project on GitHub <small>mwerner/spigot</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/mwerner/spigot/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mwerner/spigot/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mwerner/spigot">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="spigot" class="anchor" href="#spigot"><span class="octicon octicon-link"></span></a>Spigot</h1>
+
+<p><a href="https://travis-ci.org/mwerner/spigot"><img src="https://travis-ci.org/mwerner/spigot.png?branch=master" alt="Build Status"></a>
+<a href="https://codeclimate.com/github/mwerner/spigot"><img src="https://codeclimate.com/github/mwerner/spigot.png" alt="Code Climate"></a></p>
+
+<p>Spigot is an attempt to bring some sanity to consuming external API data. Without Spigot, you need
+to do this manual mapping at creation, such as:</p>
+
+<pre><code>Pull.where(number: pull.number).first_or_initialize.tap do |t|
+  t.title      = pull.title
+  t.body       = pull.body
+  t.url        = pull._links.html.href
+  t.head_ref   = pull.head.ref
+  t.head_sha   = pull.head.sha
+  t.base_ref   = pull.base.ref
+  t.base_sha   = pull.base.sha
+  t.save
+end
+</code></pre>
+
+<p>Spigot reads config files in an expected format to map the data you receive to the columns of your database.
+This becomes particularly difficult as you start having multiple sources for the same resource (ex: users).</p>
+
+<p>Spigot is able to do the translation for you and put the API data into a language your implementation understands.
+This leaves you with a simple statement to accomplish the same as above:</p>
+
+<pre><code>Pull.find_or_create_by_api(:github, pull)
+</code></pre>
+
+<p>Much better. <a href="https://github.com/mwerner/spigot/wiki">Read More</a></p>
+
+<h2>
+<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<pre><code># Our Model
+class User &lt; ActiveRecord::Base
+  include Spigot::Base
+end
+
+# Api Data Received
+data = JSON.parse("{\"full_name\":\"Dean Martin\",\"login\":\"dino@amore.io\",\"token\":\"abc123\"}")
+
+# Spigot yaml file to map this data correctly
+user:
+  full_name: name
+  login: email
+  token: auth
+
+# Usage
+User.find_or_create_by_api(:github, data).inspect
+#=&gt; #&lt;User id: 1, name: "Dean Martin", email: "dino@amore.io", auth: "abc123"&gt;
+</code></pre>
+
+<h2>
+<a name="future" class="anchor" href="#future"><span class="octicon octicon-link"></span></a>Future</h2>
+
+<p>Features to be added in the future:</p>
+
+<ul>
+<li>Callbacks</li>
+<li>Interpolating values</li>
+<li>Specifying local methods instead of attributes</li>
+</ul><h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<pre><code>gem 'spigot'
+</code></pre>
+
+<p>And then execute:</p>
+
+<pre><code>$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>$ gem install spigot
+</code></pre>
+
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/mwerner">mwerner</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
