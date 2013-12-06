@@ -25,37 +25,9 @@ able to convey a mapping of their structure into your attributes in a concise fo
 
     Pull.find_or_create_by_api(:github, pull)
 
-Much better. [Read More](https://github.com/mwerner/spigot/wiki)
+Much better.
 
-## Example
-
-    # Our Model
-    class User < ActiveRecord::Base
-      include Spigot::Base
-    end
-
-    # Api Data Received
-    data = JSON.parse("{\"full_name\":\"Dean Martin\",\"login\":\"dino@amore.io\",\"token\":\"abc123\"}")
-
-    # Spigot configuration
-    Spigot.define do
-      resource :user do
-        full_name :name
-        login :email
-        token :auth
-      end
-    end
-
-    # Usage
-    User.find_or_create_by_api(:github, data).inspect
-    #=> #<User id: 1, name: "Dean Martin", email: "dino@amore.io", auth: "abc123">
-
-## Future
-
-Features to be added in the future:
-
-- Callbacks
-- Specifying local methods instead of attributes
+[Read More](http://mwerner.github.io/spigot/)
 
 ## Installation
 
