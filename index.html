@@ -1,149 +1,446 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Spigot : Spigot provides a clean interface translating API data into context relevant objects" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
     <title>Spigot</title>
+    <meta name="author" content="Matthew Werner">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Spigot : A library which provides a clean interface translating API data into context relevant objects" />
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,900' rel='stylesheet' type='text/css'>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/highlight.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="shortcut icon" href="#">
   </head>
 
   <body>
+    <div class="top">
+      <header>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="logo" style="display:none">
+                <h1><a href="index.html">Spigot <span class="tblue icon-tint"></span></a></h1>
+              </div>
+            </div>
+            <div class="navigation pull-right">
+              <ul class="nav nav-tabs">
+                <li style="display:none"><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#docs">Docs</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </header>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/mwerner/spigot">View on GitHub</a>
+      <div id="hero" class="hero" data-0="background-position:0px 0px;">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="intro">
+                <div class="logo">
+                  <h1>Spigot <span class="tblue icon-tint"></span></h1>
+                </div>
 
-          <h1 id="project_title">Spigot</h1>
-          <h2 id="project_tagline">Spigot provides a clean interface translating API data into context relevant objects</h2>
+                <p>Easily convert API data into context relevant objects</p><br />
+                <div class="applinks well">
+                  <p><a href="https://github.com/mwerner/spigot" class="btn btn-primary">
+                    <i class="icon-github-square"> Download on Github</i>
+                  </a></p>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/mwerner/spigot/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/mwerner/spigot/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
+                  <p style="margin-top: 10px">
+                    <iframe src="http://ghbtns.com/github-btn.html?user=mwerner&repo=spigot&type=fork"
+                      allowtransparency="true" frameborder="0" scrolling="0" width="62" height="20"></iframe>
+
+                    <iframe src="http://ghbtns.com/github-btn.html?user=mwerner&repo=spigot&type=watch&count=true"
+                      allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20" style="margin-left: 30px;"></iframe>
+
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h1>
-<a name="spigot" class="anchor" href="#spigot"><span class="octicon octicon-link"></span></a>Spigot</h1>
+    <div class="features">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div id="about" class="text-center">
+              <p>
+                Spigot is an attempt to bring some sanity to consuming external API data.
+                Removing the need for manual ad hoc attribute mapping throughout your code.</p>
+              <hr />
+              <div class="row" style="text-align:left;">
+                <div class="col-md-5  col-xs-6" style="text-align:right;margin-top: 20px">
+                  <p>Without spigot, you may have some creation code such as this.</p>
+                  <br />
+                  <p style="margin-top: 20px">
+                    You're usually pulling specific data out of the response, not using half of what you get back, digging through keys and values and checking presence all over the place. These problems get multiplied when you have multiple external sources for your model.
+                  </p>
+                  <br />
+                  <p style="margin-top: 20px">
+                  You end up with a ton of code just to get the data to fit our model.
+                  </p>
+                </div>
+                <div class="col-md-7  col-xs-6">
+                  <pre><code data-language="ruby">if params[:data].present?
+  data = params[:data]
+  record = User.where(external_id: data[:id]).first
 
-<p><a href="https://travis-ci.org/mwerner/spigot"><img src="https://travis-ci.org/mwerner/spigot.png?branch=master" alt="Build Status"></a>
-<a href="https://codeclimate.com/github/mwerner/spigot"><img src="https://codeclimate.com/github/mwerner/spigot.png" alt="Code Climate"></a></p>
+  if record.nil?
+    url = "https://github.com/#{data[:login]}"
 
-<p>Spigot is an attempt to bring some sanity to consuming external API data. Without Spigot, you need
-to do this manual mapping at creation, such as:</p>
+    user = User.new({
+      name: data[:first_name],
+      email: data[:email_address],
+      url: url
+    })
 
-<pre><code>Pull.where(number: pull.number).first_or_initialize.tap do |t|
-  t.title      = pull.title
-  t.body       = pull.body
-  t.url        = pull._links.html.href
-  t.head_ref   = pull.head.ref
-  t.head_sha   = pull.head.sha
-  t.base_ref   = pull.base.ref
-  t.base_sha   = pull.base.sha
-  t.save
-end
-</code></pre>
+    if data[:profile].present?
+      user.bio = data[:profile][:text]
+    end
 
-<p>Spigot reads config files in an expected format to map the data you receive to the columns of your database.
-This becomes particularly difficult as you start having multiple sources for the same resource (ex: users).</p>
+    user.save!
+  end
+  # gross
+end</code></pre>
+                </div>
+              </div>
 
-<p>Spigot is able to do the translation for you and put the API data into a language your implementation understands.
-This leaves you with a simple statement to accomplish the same as above:</p>
 
-<pre><code>Pull.find_or_create_by_api(:github, pull)
-</code></pre>
+              <div class="row" style="text-align:left;margin-top: 50px">
+                <div class="col-md-7  col-xs-6">
+                  <pre><code data-language="ruby"># ./config/initializers/spigot.rb
+Spigot.define do
+  service :github do
+    resource :user do
+      first_name    :name
+      email_address :email
+      profile do
+        text :bio
+      end
 
-<p>Much better.</p>
+      url :login do |value|
+        "https://github.com/#{value}"
+      end
+    end
+  end
+end</code></pre>
+                </div>
+                <div class="col-md-5  col-xs-6" style="margin-top: 20px">
+                  <p style="margin-top: 20px">
+                    While using Spigot, you only need to define your map using simple ruby in an initializer and the task of wrangling this data gets much more manageable.
+                  </p>
+                  <p style="margin-top: 40px">
+                    Spigot is able to do the translation for you and put the API data into a language your implementation understands.
+                  </p>
+                </div>
+              </div>
 
-<h2>
-<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h2>
+              <div class="row" style="margin-top: 50px">
+                <div class="col-md-12  col-xs-6" style="margin-top: 20px">
+                  <p>This leaves you with a simple statement to accomplish the same task:</p>
+                  <pre><code>User.find_or_create_by_api(:github, params[:data])</code></pre>
+                  <p>Much better.</p>
+                </div>
+              </div>
 
-<pre><code># Our Model
-class User &lt; ActiveRecord::Base
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="shots">
+      <div class="container">
+        <!-- shot1-->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="shotcontent">
+              <h3 id="examples">Examples</h3>
+
+              <div class="row" style="margin-bottom: 60px">
+                <div class="col-md-12 col-xs-6">
+                  <div class="shot-content-body">
+                    <h4><i class="icon-tint tblue"></i> Basic Implementation</h4>
+                    <p>
+                      <pre><code data-language="ruby"># Our Model
+class User < ActiveRecord::Base
   include Spigot::Base
 end
 
 # Api Data Received
 data = JSON.parse("{\"full_name\":\"Dean Martin\",\"login\":\"dino@amore.io\",\"token\":\"abc123\"}")
 
-# Spigot yaml file to map this data correctly
-user:
-  full_name: name
-  login: email
-  token: auth
+# Spigot definition to map the data
+Spigot.define do
+  service :github do
+    resource :user do
+      full_name :name
+      login     :email
+      token     :auth
+    end
+  end
+end
 
 # Usage
-User.find_or_create_by_api(:github, data).inspect
-#=&gt; #&lt;User id: 1, name: "Dean Martin", email: "dino@amore.io", auth: "abc123"&gt;
-</code></pre>
+User.create_by_api(:github, data).inspect
+#=> User:0x007f976 id: 1, name: "Dean Martin", email: "dino@amore.io", auth: "abc123"</code></pre>
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-<h2>
-<a name="future" class="anchor" href="#future"><span class="octicon octicon-link"></span></a>Future</h2>
+              <hr />
 
-<p>Features to be added in the future:</p>
+              <div class="row" style="margin-bottom: 60px">
+                <div class="col-md-12 col-xs-6">
+                  <div class="shot-content-body">
+                    <h4><i class="icon-unlock-alt tblue"></i> Authentication</h4>
+                    <p>
+                      <pre><code data-language="ruby">Spigot.define do
+  service :github do
+    resource :user do
+      login :username
+      name :name
+      image(:gravatar_id){|id| "https://2.gravatar.com/avatar/#{id}" }
+    end
+  end
+end
 
-<ul>
-<li>Callbacks</li>
-<li>Interpolating values</li>
-<li>Specifying local methods instead of attributes</li>
-</ul><h2>
-<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+# Using Omniauth
+class CallbacksController < Devise::OmniauthCallbacksController
 
-<p>Add this line to your application's Gemfile:</p>
+  def github
+    user = User.create_or_update_by_api(:omniauth, request.env['omniauth.auth'])
+    sign_in(:user, user)
+    redirect_to dashboard_path
+  end
 
-<pre><code>gem 'spigot'
-</code></pre>
+end</code></pre>
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-<p>And then execute:</p>
 
-<pre><code>$ bundle
-</code></pre>
 
-<p>Or install it yourself as:</p>
+              <hr />
 
-<pre><code>$ gem install spigot
-</code></pre>
+              <div class="row" style="margin-bottom: 60px">
+                <div class="col-md-12 col-xs-6">
+                  <div class="shot-content-body">
+                    <h4><i class="icon-puzzle-piece tblue"></i> Coordinating Sources</h4>
+                    <p>
+                      <pre><code data-language="ruby"># ./config/initializers/spigot.rb
+Spigot.define do
+  service :github do
+    resource :user do
+      name  :name
+      login :username
+      gravatar_id(:image_url){|id| "https://2.gravatar.com/avatar/#{id}" }
+    end
+  end
 
-<h2>
-<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+  service :twitter do
+    resource :user do
+      name        :name
+      description :bio
+      screen_name :username
+      profile_image_url :image_url
+    end
+  end
+end
 
-<ol>
-<li>Fork it</li>
-<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
-<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
-<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
-<li>Create new Pull Request</li>
-</ol>
-      </section>
+# ./app/models/message.rb
+class Message
+  after_create :fill_author_data
+
+  def api_data
+    # API Calls ...
+  end
+
+  def fill_author_data
+    user = User.find_or_create_by_api(self.network, api_data)
+    update_attribute(:user_id, user.id)
+  end
+end
+
+# ./app/controllers/messages_controller.rb
+class MessagesController < ApplicationController
+
+  def create
+    Message.create(params[:message])
+  end
+
+end</code></pre>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+
+
+            </div>
+          </div>
+
+        </div>
+        <hr>
+
+        <div class="row">
+          <div class="shotcontent">
+            <h3 id="docs">Documentation</h3>
+          </div>
+          <div class="col-md-4 col-sm-4 col-xs-4">
+            <div class="well">
+              <ul class="list-unstyled nav nav-pills nav-stacked">
+                <li class="active"><a href="#syntax" data-toggle="tab">Syntax</a></li>
+                <li><a href="#methods" data-toggle="tab">Methods</a></li>
+                <li><a href="#service" data-toggle="tab">Services</a></li>
+                <li><a href="#resources" data-toggle="tab">Resources</a></li>
+                <li><a href="#nested" data-toggle="tab">Nested Data</a></li>
+                <li><a href="#proc" data-toggle="tab">Evaluated Ruby</a></li>
+                <li><a href="#options" data-toggle="tab">Options</a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-md-8 col-sm-8 col-xs-12">
+            <div class="tab-content">
+              <div class="tab-pane" id="syntax">
+                <h3>Syntax</h3>
+                <hr />
+                <p>
+                  We define the map used to translate api data by passing a block to the
+                  <code>Spigot.define</code> method.
+                </p>
+                <pre><code data-language="ruby">Spigot.define do
+  service :github do
+    resource :user do
+      name  :name
+      login :username
+    end
+  end
+end</pre></code>
+              <p>
+                This map defines the data attributes for a User received from Github.
+                The data received has the keys <code>:name</code> and <code>:login</code>.
+                The values at those keys are mapped to the columns <code>:name</code> and
+                <code>:username</code> respectively.
+              </p>
+              </div>
+
+              <div class="tab-pane active" id="methods">
+                <h3>Methods</h3>
+                <hr />
+                <p>
+                  Each ActiveRecord method has a similar signature. Each accepts two parameters, the first being a service name defined in your Spigot map, the second being a hash of the data you would like to parse.
+
+                  You specify the attribute used in your query by assigning the <code>primary_key</code> option in your Spigot definition.
+                </p>
+                <dl>
+                  <dt><code>find_by_api(service, data)</code></dt>
+                  <dt><code>find_all_by_api(service, data)</code></dt>
+                  <dt><code>create_by_api(service, data)</code></dt>
+                  <dt><code>update_by_api(service, data)</code></dt>
+                  <dt><code>find_or_create_by_api(service, data)</code></dt>
+                  <dt><code>create_or_update_by_api(service, data)</code></dt>
+                </dl>
+                <pre><code data-language="ruby">Spigot.define do
+  service :github do
+    resource :user
+      full_name :name
+      login     :email
+      token     :auth
+      options do
+        primary_key :email
+      end
+    end
+  end
+end
+
+# API Data
+data = {"full_name":"Dean","login":"dino@amore.io","token":"bcd456"}
+
+User.find_by_api(:github, data)</code>
+<code data-language='sql'>User Load (0.1ms)  SELECT "users".* FROM "users" WHERE "users"."email" = 'dino@amore.io' ORDER BY "users"."id" ASC LIMIT 1</code>
+<code>#=> User id: 1, name: "Dean Martin", email: "dino@amore.io", token: "abc123"</code></pre>
+              </div>
+
+              <div class="tab-pane" id="service">
+                <h3>Services</h3>
+                <hr />
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque suscipit metus nec blandit. Praesent consectetur feugiat eros eu rhoncus.Venenatis lorem sed bibendum sollicitudin.</p>
+              </div>
+
+              <div class="tab-pane" id="resources">
+                <h3>Resources</h3>
+                <hr />
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque suscipit metus nec blandit. Praesent consectetur feugiat eros eu rhoncus.Venenatis lorem sed bibendum sollicitudin.</p>
+              </div>
+
+              <div class="tab-pane" id="nested">
+                <h3>Nested Data</h3>
+                <hr />
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque suscipit metus nec blandit. Praesent consectetur feugiat eros eu rhoncus.Venenatis lorem sed bibendum sollicitudin.</p>
+              </div>
+
+              <div class="tab-pane" id="proc">
+                <h3>Evaluated Ruby</h3>
+                <hr />
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque suscipit metus nec blandit. Praesent consectetur feugiat eros eu rhoncus.Venenatis lorem sed bibendum sollicitudin.</p>
+              </div>
+
+              <div class="tab-pane" id="options">
+                <h3>Options</h3>
+                <hr />
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum pellentesque suscipit metus nec blandit. Praesent consectetur feugiat eros eu rhoncus.Venenatis lorem sed bibendum sollicitudin.</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Spigot maintained by <a href="https://github.com/mwerner">mwerner</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="copy text-center">
+              &copy; 2013 <a href="index.html">Spigot</a>
+              <a href="https://travis-ci.org/mwerner/spigot">
+                <img src="https://travis-ci.org/mwerner/spigot.png?branch=master" alt="Build Status" style="max-width:100%;">
+              </a>
+              <a href="https://codeclimate.com/github/mwerner/spigot">
+                <img src="https://codeclimate.com/github/mwerner/spigot.png" alt="Code Climate" style="max-width:100%;">
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
 
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-46223086-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
-
+    <script src="js/jquery.js"></script>
+    <script src="js/vendor/mousewheel.jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/respond.min.js"></script>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/custom.js"></script>
+    <script src="js/vendor/rainbow/rainbow.js"></script>
+    <script src="js/vendor/rainbow/ruby.js"></script>
+    <script src="js/vendor/rainbow/sql.js"></script>
+    <script src="js/vendor/rainbow/generic.js"></script>
   </body>
 </html>
