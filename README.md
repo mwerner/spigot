@@ -6,24 +6,32 @@
 Spigot is an attempt to bring some sanity to consuming external API data. Without Spigot, you need
 to do this manual mapping at creation, such as:
 
-    Pull.where(number: pull.number).first_or_initialize.tap do |t|
-      head, base = pull['head'], pull['base']
-      links = pull._links
-      t.title      = pull['title']
-      t.body       = pull['body']
-      t.url        = links.html.href
-      t.head_ref   = head['ref']
-      t.head_sha   = head['sha']
-      t.base_ref   = base['ref']
-      t.base_sha   = base['sha']
-      t.save
+    if params[:data].present?
+      data = params[:data]
+      record = User.where(external_id: data[:id]).first
+
+      if record.nil?
+        url = "https://github.com/#{data[:login]}"
+
+        user = User.new({
+          name: data[:first_name],
+          email: data[:email_address],
+          url: url
+        })
+
+        if data[:profile].present?
+          user.bio = data[:profile][:text]
+        end
+
+        user.save!
+      end
     end
 
-This becomes particularly difficult as you start having multiple external sources for the same resource (ex: users from twitter and facebook).
+This becomes particularly difficult as you start having multiple external sources for the same resource (ex: users from both twitter and facebook).
 Spigot uses a ruby api to map the data you receive to the columns of your database. As a result, you're
 able to convey a mapping of their structure into your attributes in a concise format. Afterwards, you can accomplish the above work in a simple statement:
 
-    Pull.find_or_create_by_api(:github, pull)
+    User.find_or_create_by_api(:github, params[:data])
 
 Much better.
 
