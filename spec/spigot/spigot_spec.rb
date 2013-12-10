@@ -14,5 +14,19 @@ describe Spigot do
       Spigot.should_receive(:define)
       subject.service(:github){'foo'}
     end
+
+    it 'continues a normal definition' do
+      Spigot::Map::Service.any_instance.should_receive(:resource)
+      subject.service(:github) do
+        resource(:user){ 'foo' }
+      end
+    end
+  end
+
+  context '#logger' do
+    it 'produces a logger' do
+      Logger.should_receive(:new).with(STDOUT)
+      Spigot.logger
+    end
   end
 end

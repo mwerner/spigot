@@ -54,6 +54,37 @@ describe Spigot::Map::Service do
     end
   end
 
+  context '#extract' do
+    let(:data){{a: 1}}
+    context 'with no map defined' do
+      before{ Spigot.config.reset }
+      it 'returns passed params' do
+        klass.extract(data).should eq(data)
+      end
+    end
+
+    context 'with a map defined' do
+      it 'returns a nil service when none is defined' do
+        klass.extract(data).should eq([nil, data])
+      end
+
+      it 'searches for existing service definition' do
+        Spigot.config.map.should_receive(:service).with(:a)
+        klass.extract(data)
+      end
+
+      it 'returns the correct service if present' do
+        Spigot::Mapping::ActiveUser.stub
+        klass.extract(github: data).should eq([:github, data])
+      end
+
+      it 'does not return an unmatched service' do
+        Spigot::Mapping::ActiveUser.stub
+        klass.extract(twitter: data).should eq([nil, {twitter: data}])
+      end
+    end
+  end
+
   context '.resource' do
     it 'builds a resource' do
       Spigot::Map::Resource.should_receive(:new).with(:user)

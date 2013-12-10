@@ -86,7 +86,7 @@ module Spigot
       return @resource_map if defined?(@resource_map)
       resource_key = resource.to_s.underscore
       @resource_map = service_map[resource_key]
-      raise MissingResourceError, "There is no #{resource_key} resource_map for #{service}" if @resource_map.nil?
+      raise MissingResourceError, "There is no #{resource_key} resource_map" if @resource_map.nil?
       @resource_map
     end
 

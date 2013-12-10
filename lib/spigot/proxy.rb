@@ -76,11 +76,14 @@ module Spigot
 
     def service_scoped(params={})
       return params if @service.nil?
+      return {@service => params} if Spigot.config.map.nil?
 
       key, data = Spigot::Map::Service.extract(params)
-      raise Spigot::InvalidServiceError, "You cannot specify two services" if key && (key.to_sym != @service.to_sym)
+      return {@service => params} if key.nil?
 
-      {(@service || key) => data}
+      raise Spigot::InvalidServiceError, "You cannot specify two services" if key.to_sym != @service.to_sym
+
+      {key => data}
     end
 
   end

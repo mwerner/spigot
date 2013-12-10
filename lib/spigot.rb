@@ -48,9 +48,10 @@ module Spigot
 
   def self.logger
     @log ||= Spigot.config.logger || begin
-      buffer = Logger.new(STDOUT)
-      buffer.level = $0 == 'irb' ? Logger::DEBUG : Logger::INFO
-      buffer.formatter = proc{|severity, datetime, progname, msg| "#{msg}\n"}
+      if buffer = Logger.new(STDOUT)
+        buffer.level = ($0 == 'irb' ? Logger::DEBUG : Logger::INFO)
+        buffer.formatter = proc{|severity, datetime, progname, msg| "#{msg}\n"}
+      end
       buffer
     end
   end
