@@ -21,6 +21,15 @@ describe Spigot::Map::Base do
       subject.define
     end
 
+    it 'does not require a service' do
+      subject.define do
+        resource :user
+      end
+
+      subject.services.length.should eq(1)
+      subject.services.first.name.should eq(:any)
+    end
+
     it 'works with one service' do
       subject.define do
         service :github

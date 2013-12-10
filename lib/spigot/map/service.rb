@@ -16,6 +16,10 @@
         current_map.update(name, service)
       end
 
+      def self.resource(name, &block)
+        service(:any){ resource(name, &block) }
+      end
+
       def self.find(name)
         current_map.service(name)
       end

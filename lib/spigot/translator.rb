@@ -25,9 +25,8 @@ module Spigot
     # @param service  [Symbol] Service doing the translating. Must have a corresponding yaml file.
     # @param resource [Object] This is the class using the translator.
     # @param data     [Hash] Data in the format received by the api (optional).
-    def initialize(service, resource, data={})
+    def initialize(resource, service=nil, data={})
       @service = service
-      raise InvalidServiceError, 'You must provide a service name' if service.nil? || service == ''
       @resource = resource.is_a?(Class) ? resource : resource.class
       raise InvalidResourceError, 'You must provide a calling resource' if resource.nil?
       @data = data || {}
@@ -103,7 +102,7 @@ module Spigot
     end
 
     def service_map
-      Spigot.config.map ? Spigot.config.map.service(service) : {}
+      Spigot.config.map ? Spigot.config.map.service(service || :any) : {}
     end
 
   end

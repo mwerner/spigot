@@ -19,7 +19,7 @@ module Spigot
       # @param service [Symbol] Service from which the data was received
       # @param api_data [Hash] The data as received from the remote api, unformatted.
       def find_all_by_api(service, api_data)
-        find_by_translator Translator.new(service, self, api_data)
+        find_by_translator Translator.new(self, service, api_data)
       end
 
       ## #create_by_api(service, api_data)
@@ -29,7 +29,7 @@ module Spigot
       # @param service [Symbol] Service from which the data was received
       # @param api_data [Hash] The data as received from the remote api, unformatted.
       def create_by_api(service, api_data)
-        create_by_translator Translator.new(service, self, api_data)
+        create_by_translator Translator.new(self, service, api_data)
       end
 
       ## #update_by_api(service, api_data)
@@ -40,7 +40,7 @@ module Spigot
       # @param service [Symbol] Service from which the data was received
       # @param api_data [Hash] The data as received from the remote api, unformatted.
       def update_by_api(service, api_data)
-        babel = Translator.new(service, self, api_data)
+        babel = Translator.new(self, service, api_data)
         record = find_by_translator(babel).first
         update_by_translator(babel, record) if record.present?
       end
@@ -53,7 +53,7 @@ module Spigot
       # @param service [Symbol] Service from which the data was received
       # @param api_data [Hash] The data as received from the remote api, unformatted.
       def find_or_create_by_api(service, api_data)
-        babel = Translator.new(service, self, api_data)
+        babel = Translator.new(self, service, api_data)
         find_by_translator(babel).first || create_by_translator(babel)
       end
 
@@ -65,7 +65,7 @@ module Spigot
       # @param service [Symbol] Service from which the data was received
       # @param api_data [Hash] The data as received from the remote api, unformatted.
       def create_or_update_by_api(service, api_data)
-        babel = Translator.new(service, self, api_data)
+        babel = Translator.new(self, service, api_data)
         record = find_by_translator(babel).first
         record.present? ? update_by_translator(babel, record) : create_by_translator(babel)
       end

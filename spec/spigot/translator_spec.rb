@@ -3,27 +3,27 @@ require 'spec_helper'
 describe Spigot::Translator do
   context '#initialize' do
     before{ Spigot::Mapping::User.basic }
-    it 'requires a service' do
+    it 'does not require a service' do
       expect{
-        Spigot::Translator.new(nil, Struct)
-      }.to raise_error(Spigot::InvalidServiceError)
+        Spigot::Translator.new(Struct, nil)
+      }.to_not raise_error(Spigot::InvalidServiceError)
     end
 
     it 'requires a resource' do
       expect{
-        Spigot::Translator.new(:github, nil)
+        Spigot::Translator.new(nil, :github)
       }.to raise_error(Spigot::InvalidResourceError)
     end
 
     it 'accepts an instance or class resource' do
-      by_class    = Spigot::Translator.new(:github, User)
-      by_instance = Spigot::Translator.new(:github, User.new)
+      by_class    = Spigot::Translator.new(User)
+      by_instance = Spigot::Translator.new(User.new)
       expect(by_class.resource).to eq(by_instance.resource)
     end
   end
 
   context '.id' do
-    let(:subject){ Spigot::Translator.new(:github, User.new, Spigot::Data::User.basic) }
+    let(:subject){ Spigot::Translator.new(User.new, :github, Spigot::Data::User.basic) }
     before{ Spigot::Mapping::User.basic }
     it 'returns the value at the foreign_key' do
       subject.stubs(:foreign_key).returns('id')
@@ -33,7 +33,7 @@ describe Spigot::Translator do
 
   context '.format' do
     context 'with a missing resource map' do
-      let(:subject){ Spigot::Translator.new(:github, User.new, Spigot::Data::User.basic) }
+      let(:subject){ Spigot::Translator.new(User.new, :github, Spigot::Data::User.basic) }
       it 'raises error with a missing resource map' do
         expect{
           subject.format
@@ -44,7 +44,7 @@ describe Spigot::Translator do
     context 'with a valid resource map' do
       context 'with a simple map' do
         let(:data){ Spigot::Data::User.basic }
-        let(:subject){ Spigot::Translator.new(:github, User.new, data) }
+        let(:subject){ Spigot::Translator.new(User.new, :github, data) }
         before{ Spigot::Mapping::User.basic }
         it 'returns empty hash from nil data' do
           subject.data = {}
@@ -58,7 +58,7 @@ describe Spigot::Translator do
 
       context 'with a nested map' do
         let(:data){ Spigot::Data::User.nested }
-        let(:subject){ Spigot::Translator.new(:github, User.new, data) }
+        let(:subject){ Spigot::Translator.new(User.new, :github, data) }
         before{ Spigot::Mapping::User.nested }
 
         it 'traverses into the nested hash' do
@@ -72,7 +72,7 @@ describe Spigot::Translator do
 
       context "nested twice" do
         let(:data){Spigot::Data::User.double_nested}
-        let(:subject){Spigot::Translator.new(:github, User.new, data)}
+        let(:subject){Spigot::Translator.new(User.new, :github, data)}
         before{ Spigot::Mapping::User.nested_twice }
 
         it 'traverses multiple levels' do
@@ -87,7 +87,7 @@ describe Spigot::Translator do
 
       context 'with an array of values' do
         let(:data){Spigot::Data::User.array}
-        let(:subject){Spigot::Translator.new(:github, User.new, data)}
+        let(:subject){Spigot::Translator.new(User.new, :github, data)}
         before{ Spigot::Mapping::User.basic }
 
         it 'returns an array of formatted data' do
@@ -100,7 +100,7 @@ describe Spigot::Translator do
 
       context 'with a nested array of values' do
         let(:data){ Spigot::Data::User.nested_array }
-        let(:subject){Spigot::Translator.new(:github, User.new, data)}
+        let(:subject){Spigot::Translator.new(User.new, :github, data)}
         before{ Spigot::Mapping::User.nested_array }
 
         it 'handles a nested array of values' do
@@ -114,7 +114,7 @@ describe Spigot::Translator do
 
       context 'with a namedspaced resource' do
         let(:data){ Spigot::Data::Post.basic }
-        let(:subject){Spigot::Translator.new(:github, Wrapper::Post.new, data)}
+        let(:subject){Spigot::Translator.new(Wrapper::Post.new, :github, data)}
         before{ Spigot::Mapping::Post.basic }
 
         it 'accesses the wrapper/post key' do
@@ -127,7 +127,7 @@ describe Spigot::Translator do
 
       context 'with an interpolated value' do
         let(:data){ Spigot::Data::User.basic }
-        let(:subject){ Spigot::Translator.new(:github, User.new, data) }
+        let(:subject){ Spigot::Translator.new(User.new, :github, data) }
         before{ Spigot::Mapping::User.interpolated }
         it 'reads one layer' do
           expect(subject.format).to eq({name: 'Dean Martin', username: '@classyasfuck'})
@@ -136,7 +136,7 @@ describe Spigot::Translator do
 
       context 'with a nested interpolated value' do
         let(:data){ Spigot::Data::User.nested }
-        let(:subject){ Spigot::Translator.new(:github, User.new, data) }
+        let(:subject){ Spigot::Translator.new(User.new, :github, data) }
         before{ Spigot::Mapping::User.nested_interpolation }
         it 'reads one layer' do
           expect(subject.format).to eq({name: 'Dean Martin', contact: 'dino@amore.io', username: '@classyasfuck'})
@@ -146,7 +146,7 @@ describe Spigot::Translator do
   end
 
   context '#lookup' do
-    let(:subject){Spigot::Translator.new(:github, User.new, {a: '1'})}
+    let(:subject){Spigot::Translator.new(User.new, :github, {a: '1'})}
 
     it 'returns the value at a given key' do
       subject.lookup(:a).should eq('1')
@@ -155,7 +155,7 @@ describe Spigot::Translator do
 
   context '#conditions' do
     let(:data){ Spigot::Data::User.basic }
-    let(:subject){Spigot::Translator.new(:github, User.new, data)}
+    let(:subject){Spigot::Translator.new(User.new, :github, data)}
 
     context 'without conditions specified' do
       before{ Spigot::Mapping::User.basic }
@@ -177,7 +177,7 @@ describe Spigot::Translator do
   end
 
   context '#options' do
-    let(:subject){ Spigot::Translator.new(:github, User.new, {remote_id: '987'}) }
+    let(:subject){ Spigot::Translator.new(User.new, :github, {remote_id: '987'}) }
 
     context 'without options provided' do
       before{ Spigot::Mapping::User.basic }
