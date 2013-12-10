@@ -40,6 +40,45 @@ module Spigot
         end
       end
 
+      def self.serviceless
+        Spigot.define do
+          resource :user do
+            full_name :name
+            login     :username
+          end
+        end
+      end
+
+      def self.multiple_serviceless
+        Spigot.define do
+          resource :user do
+            full_name :name
+            login     :username
+          end
+
+          resource :post do
+            title :headline
+            body  :body
+          end
+        end
+      end
+
+      def self.service_and_serviceless
+        Spigot.define do
+          resource :user do
+            full_name :name
+            login     :username
+          end
+
+          service :github do
+            resource :user do
+              login :name
+              full_name :username
+            end
+          end
+        end
+      end
+
       def self.nested_twice
         template do
           full_name :name

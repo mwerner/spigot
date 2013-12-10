@@ -142,6 +142,44 @@ describe Spigot::Translator do
           expect(subject.format).to eq({name: 'Dean Martin', contact: 'dino@amore.io', username: '@classyasfuck'})
         end
       end
+
+      context 'without a service' do
+        let(:data){ Spigot::Data::User.basic }
+        let(:subject){ Spigot::Translator.new(User.new, nil, data) }
+        before{ Spigot::Mapping::User.serviceless }
+        it 'reads one layer' do
+          expect(subject.format).to eq({name: 'Dean Martin', username: 'classyasfuck'})
+        end
+
+        it 'does not use the any definition with an invalid service' do
+          subject = Spigot::Translator.new(User.new, :github, data)
+          expect {
+            subject.format
+          }.to raise_error(Spigot::InvalidServiceError)
+        end
+      end
+
+      context 'multiple resources without a service' do
+        before{ Spigot::Mapping::User.multiple_serviceless }
+        it 'reads one layer' do
+          user = Spigot::Translator.new(User.new, nil, Spigot::Data::User.basic)
+          post = Spigot::Translator.new(Post.new, nil, Spigot::Data::Post.basic)
+
+          expect(user.format).to eq({name: 'Dean Martin', username: 'classyasfuck'})
+          expect(post.format).to eq({headline: 'Brief Article', body: 'lorem ipsum'})
+        end
+      end
+
+      context 'with and without service' do
+        before{ Spigot::Mapping::User.service_and_serviceless }
+        it 'prefers the service definition' do
+          service = Spigot::Translator.new(User.new, :github, Spigot::Data::User.basic)
+          no_service = Spigot::Translator.new(User.new, nil, Spigot::Data::User.basic)
+
+          expect(service.format).to eq({name: 'classyasfuck', username: 'Dean Martin'})
+          expect(no_service.format).to eq({name: 'Dean Martin', username: 'classyasfuck'})
+        end
+      end
     end
   end
 

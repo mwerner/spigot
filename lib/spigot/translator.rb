@@ -102,7 +102,18 @@ module Spigot
     end
 
     def service_map
-      Spigot.config.map ? Spigot.config.map.service(service || :any) : {}
+      return {} if Spigot.config.map.nil?
+
+      @service_map = Spigot.config.map.service(service || :any)
+      if @service_map.nil?
+        if service.nil?
+          raise MissingResourceError, "There is no #{resource_key} resource_map"
+        else
+          raise InvalidServiceError, "No definition found for #{service}"
+        end
+      end
+
+      @service_map
     end
 
   end

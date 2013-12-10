@@ -14,6 +14,7 @@ end
 
 # Mocked Classes
 User = Class.new(Hashie::Mash)
+Post = Class.new(Hashie::Mash)
 
 class ActiveUser < ActiveRecord::Base
   include Spigot::Base
