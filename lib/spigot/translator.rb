@@ -107,7 +107,7 @@ module Spigot
       @service_map = Spigot.config.map.service(service || :any)
       if @service_map.nil?
         if service.nil?
-          raise MissingResourceError, "There is no #{resource_key} resource_map"
+          raise MissingResourceError, "There is no #{resource.to_s.underscore} resource_map"
         else
           raise InvalidServiceError, "No definition found for #{service}"
         end

@@ -1,29 +1,26 @@
 require 'active_record'
 require 'spigot'
 
-Spigot.define do
-  service :github do
-    resource :active_user do
-      id        :github_id
-      full_name :name
-      login     :username
-      contact do
-        address   :address
-        telephone do
-          work :work_phone
-          home :home_phone
-        end
-        url :homepage do |value|
-          "https://github.com/#{value}"
-        end
-      end
+Spigot.resource(:active_user) do
+  id        :github_id
+  full_name :name
+  login     :username
+  contact do
+    address   :address
+    telephone do
+      work :work_phone
+      home :home_phone
     end
+    url :homepage do |value|
+      "https://github.com/#{value}"
+    end
+  end
+end
 
-    resource :pull_request do
-      id        :id
-      title     :title
-      body      :body
-    end
+Spigot.service(:twitter) do
+  resource :active_user do
+    name      :name
+    username  :username
   end
 end
 
