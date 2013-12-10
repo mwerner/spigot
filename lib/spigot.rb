@@ -21,6 +21,18 @@ module Spigot
     (config.map || Spigot::Map::Base.new).define(&block)
   end
 
+  def self.service(name, &block)
+    define do
+      service(name, &block)
+    end
+  end
+
+  def self.resource(name, &block)
+    define do
+      resource(name, &block)
+    end
+  end
+
   def self.configure
     yield config
   end

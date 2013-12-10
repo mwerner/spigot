@@ -9,6 +9,13 @@ module Spigot
         end
       end
 
+      def self.abridged
+        Spigot.resource :user do
+          full_name :name
+          login     :username
+        end
+      end
+
       def self.interpolated
         template do
           full_name :name

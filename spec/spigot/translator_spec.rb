@@ -180,6 +180,15 @@ describe Spigot::Translator do
           expect(no_service.format).to eq({name: 'Dean Martin', username: 'classyasfuck'})
         end
       end
+
+      context 'with an abridged definition' do
+        let(:data){ Spigot::Data::User.basic }
+        let(:subject){ Spigot::Translator.new(User.new, nil, data) }
+        before{ Spigot::Mapping::User.abridged }
+        it 'reads one layer' do
+          expect(subject.format).to eq({name: 'Dean Martin', username: 'classyasfuck'})
+        end
+      end
     end
   end
 
