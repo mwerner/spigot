@@ -13,8 +13,7 @@ module Spigot
     #
     # @param service [String] This is the service that dictates the proxy.
     # @param resource [Object] This is the class implementing the proxy.
-    def initialize(service, resource)
-      raise MissingServiceError, "No service definition found for #{service}" if Spigot.config.map.service(service).nil?
+    def initialize(resource, service=nil)
       @service  = service
       @resource = resource
     end
@@ -22,7 +21,7 @@ module Spigot
     ## #translator
     # Instantiate a Spigot::Translator object with the contextual service and resource
     def translator
-      Translator.new(service, resource)
+      Translator.new(resource, service)
     end
 
     ## #map

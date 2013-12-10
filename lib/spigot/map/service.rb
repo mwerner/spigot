@@ -36,6 +36,18 @@
         resources.detect{|r| r.instance_variable_get(:@name).to_sym == name.to_sym}
       end
 
+      def self.extract(params)
+        return params if current_map.nil?
+        name    = params.keys.first
+        service = current_map.service(name)
+
+        if service.nil?
+          return [nil, params]
+        else
+          return [service.name.to_sym, params[name]]
+        end
+      end
+
       private
 
       def self.current_map
