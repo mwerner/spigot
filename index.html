@@ -50,12 +50,12 @@
                     <i class="icon-github-square"> Download on Github</i>
                   </a></p>
 
-                  <p style="margin-top: 10px">
+                  <p class="actionbuttons">
                     <iframe src="http://ghbtns.com/github-btn.html?user=mwerner&repo=spigot&type=fork"
                       allowtransparency="true" frameborder="0" scrolling="0" width="62" height="20"></iframe>
 
                     <iframe src="http://ghbtns.com/github-btn.html?user=mwerner&repo=spigot&type=watch&count=true"
-                      allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20" style="margin-left: 30px;"></iframe>
+                      allowtransparency="true" frameborder="0" scrolling="0" width="95" height="20"></iframe>
 
                     <a href="https://twitter.com/share" class="twitter-share-button" data-lang="en">Tweet</a>
                     <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -77,15 +77,15 @@
                 Spigot is an attempt to bring some sanity to consuming external API data.
                 Removing the need for manual ad hoc attribute mapping throughout your code.</p>
               <hr />
-              <div class="row" style="text-align:left;">
-                <div class="col-md-5  col-xs-6" style="text-align:right;margin-top: 20px">
+              <div class="row">
+                <div class="col-md-5  col-xs-6">
                   <p>Without spigot, you may have some creation code such as this.</p>
                   <br />
-                  <p style="margin-top: 20px">
+                  <p>
                     You're usually pulling specific data out of the response, not using half of what you get back, digging through keys and values and checking presence all over the place. These problems get multiplied when you have multiple external sources for your model.
                   </p>
                   <br />
-                  <p style="margin-top: 20px">
+                  <p>
                   You end up with a ton of code just to get the data to fit our model.
                   </p>
                 </div>
@@ -115,39 +115,35 @@ end</code></pre>
               </div>
 
 
-              <div class="row" style="text-align:left;margin-top: 50px">
+              <div class="row">
                 <div class="col-md-7  col-xs-6">
                   <pre><code data-language="ruby"># ./config/initializers/spigot.rb
-Spigot.define do
-  service :github do
-    resource :user do
-      first_name    :name
-      email_address :email
-      profile do
-        text :bio
-      end
+Spigot.resource :user do
+  first_name    :name
+  email_address :email
+  profile do
+    text :bio
+  end
 
-      url :login do |value|
-        "https://github.com/#{value}"
-      end
-    end
+  url :login do |value|
+    "https://github.com/#{value}"
   end
 end</code></pre>
                 </div>
-                <div class="col-md-5  col-xs-6" style="margin-top: 20px">
-                  <p style="margin-top: 20px">
+                <div class="col-md-5  col-xs-6">
+                  <p>
                     While using Spigot, you only need to define your map using simple ruby in an initializer and the task of wrangling this data gets much more manageable.
                   </p>
-                  <p style="margin-top: 40px">
+                  <p>
                     Spigot is able to do the translation for you and put the API data into a language your implementation understands.
                   </p>
                 </div>
               </div>
 
-              <div class="row" style="margin-top: 50px">
-                <div class="col-md-12  col-xs-6" style="margin-top: 20px">
+              <div class="row">
+                <div class="col-md-12  col-xs-6">
                   <p>This leaves you with a simple statement to accomplish the same task:</p>
-                  <pre><code>User.find_or_create_by_api(:github, params[:data])</code></pre>
+                  <pre><code data-language="ruby">User.find_or_create_by_api(params[:data])</code></pre>
                   <p>Much better.</p>
                 </div>
               </div>
@@ -161,13 +157,12 @@ end</code></pre>
 
     <div class="shots">
       <div class="container">
-        <!-- shot1-->
         <div class="row">
           <div class="col-md-12">
             <div class="shotcontent">
               <h3 id="examples">Examples</h3>
 
-              <div class="row" style="margin-bottom: 60px">
+              <div class="row">
                 <div class="col-md-12 col-xs-6">
                   <div class="shot-content-body">
                     <h4><i class="icon-tint tblue"></i> Basic Implementation</h4>
@@ -192,7 +187,7 @@ Spigot.define do
 end
 
 # Usage
-User.create_by_api(:github, data).inspect
+User.create_by_api({github: data}).inspect
 #=> User:0x007f976 id: 1, name: "Dean Martin", email: "dino@amore.io", auth: "abc123"</code></pre>
                     </p>
                   </div>
@@ -201,7 +196,7 @@ User.create_by_api(:github, data).inspect
 
               <hr />
 
-              <div class="row" style="margin-bottom: 60px">
+              <div class="row">
                 <div class="col-md-12 col-xs-6">
                   <div class="shot-content-body">
                     <h4><i class="icon-unlock-alt tblue"></i> Authentication</h4>
@@ -220,7 +215,7 @@ end
 class CallbacksController < Devise::OmniauthCallbacksController
 
   def github
-    user = User.create_or_update_by_api(:omniauth, request.env['omniauth.auth'])
+    user = User.create_or_update_by_api({omniauth: request.env['omniauth.auth']})
     sign_in(:user, user)
     redirect_to dashboard_path
   end
@@ -231,11 +226,9 @@ end</code></pre>
                 </div>
               </div>
 
-
-
               <hr />
 
-              <div class="row" style="margin-bottom: 60px">
+              <div class="row">
                 <div class="col-md-12 col-xs-6">
                   <div class="shot-content-body">
                     <h4><i class="icon-puzzle-piece tblue"></i> Coordinating Sources</h4>
@@ -269,7 +262,7 @@ class Message
   end
 
   def fill_author_data
-    user = User.find_or_create_by_api(self.network, api_data)
+    user = User.find_or_create_by_api({self.network => api_data})
     update_attribute(:user_id, user.id)
   end
 end
@@ -330,47 +323,45 @@ end</code></pre>
     end
   end
 end</pre></code>
-              <p>
-                This map defines the data attributes for a User received from Github.
-                The data received has the keys <code>:name</code> and <code>:login</code>.
-                The values at those keys are mapped to the columns <code>:name</code> and
-                <code>:username</code> respectively.
-              </p>
+                <p>
+                  This map defines the data attributes for a User received from Github.
+                  The data received has the keys <code>:name</code> and <code>:login</code>.
+                  The values at those keys are mapped to the columns <code>:name</code> and
+                  <code>:username</code> respectively.
+                </p>
               </div>
 
               <div class="tab-pane" id="methods">
                 <h3>Methods</h3>
                 <hr />
                 <p>
-                  Each ActiveRecord method has a similar signature. Each accepts two parameters, the first being a service name defined in your Spigot map, the second being a hash of the data you would like to parse.
-
+                  Each ActiveRecord method has a similar signature. Each accepts a hash of data, if you want to scope your data to a specific service, pass the data in as a value keyed to the service name <code>{'username' => 'dino'}</code> vs. <code>{ github: {'username' => 'dino'} }</code>.
+                </p>
+                <p>
                   You specify the attribute used in your query by assigning the <code>primary_key</code> option in your Spigot definition.
                 </p>
                 <dl>
-                  <dt><code>find_by_api(service, data)</code></dt>
-                  <dt><code>find_all_by_api(service, data)</code></dt>
-                  <dt><code>create_by_api(service, data)</code></dt>
-                  <dt><code>update_by_api(service, data)</code></dt>
-                  <dt><code>find_or_create_by_api(service, data)</code></dt>
-                  <dt><code>create_or_update_by_api(service, data)</code></dt>
+                  <dt><code>find_by_api</code></dt>
+                  <dt><code>find_all_by_api</code></dt>
+                  <dt><code>create_by_api</code></dt>
+                  <dt><code>update_by_api</code></dt>
+                  <dt><code>find_or_create_by_api</code></dt>
+                  <dt><code>create_or_update_by_api</code></dt>
                 </dl>
-                <pre><code data-language="ruby">Spigot.define do
-  service :github do
-    resource :user
-      full_name :name
-      login     :email
-      token     :auth
-      options do
-        primary_key :email
-      end
-    end
+                <pre><code data-language="ruby"># Spigot Definition
+Spigot.resource :user do
+  full_name :name
+  login     :email
+  token     :auth
+  options do
+    primary_key :email
   end
 end
 
 # API Data
 data = {"full_name":"Dean","login":"dino@amore.io","token":"bcd456"}
 
-User.find_by_api(:github, data)</code>
+User.find_by_api(data)</code>
 <code data-language='sql'>User Load (0.1ms)  SELECT "users".* FROM "users" WHERE "users"."email" = 'dino@amore.io' ORDER BY "users"."id" ASC LIMIT 1</code>
 <code>#=> User id: 1, name: "Dean Martin", email: "dino@amore.io", token: "abc123"</code></pre>
               </div>
@@ -381,14 +372,16 @@ User.find_by_api(:github, data)</code>
                 <p>
                   Spigot definitions have a <code>service</code> keyword. You can pass it a name
                   and then a block of <code>resource</code> definitions. Each service denotes a different
-                  source of API data, such as Twitter or Github.
+                  source of API data, such as Twitter or Github. You can also call service on the `Spigot` object without the define method.
                 </p>
                 <pre><code data-language="ruby">Spigot.define do
   service :twitter do
     ...
   end
+end
 
-  service :yelp do
+Spigot.service :yelp do
+  resource :review do
     ...
   end
 end</code></pre>
@@ -401,17 +394,23 @@ end</code></pre>
                   Spigot definitions have a <code>resource</code> keyword. This corresponds to the name of the class that is implementing this map. Spigot uses the resource name to look up which map to use for the class you're currently mixing Spigot into.
                 </p>
 
-                <p>In this code block, we are defining a service for the Twitter API. When we pass twitter data to a spigot method used on the <code>User</code> class, it will use the mapping defined in the <code>:user</code> resource.</p>
+                <p>
+                  In this code block, we are defining a service for the Twitter API. When we pass twitter data to a spigot method used on the <code>User</code> class, it will use the mapping defined in the <code>:user</code> resource.
+                </p>
+
+                <p>
+                  If you define a resource without enclosing it in a service, it will use this map whenever you don't specify which service to use as you pass the data in.
+                </p>
                 <pre><code data-language="ruby">Spigot.define do
   service :twitter do
     resource :user do
       ...
     end
-
-    resource :tweet do
-      ...
-    end
   end
+end
+
+Spigot.resource(:tweet) do
+  ...
 end</code></pre>
               </div>
 
@@ -423,15 +422,11 @@ end</code></pre>
                 </p>
 
                 <p>In this code block, we are mapping data that has a <code>contact</code> key that points to a nested hash containing data with keys <code>login</code> and <code>phone</code>. We will drill down into the <code>contact</code> hash and map those corresponding values to the appropriate attributes in our formatted hash.</p>
-                <pre><code data-language="ruby">Spigot.define do
-  service :twitter do
-    resource :user do
-      full_name :name
-      contact do
-        login :email
-        phone :telephone
-      end
-    end
+                <pre><code data-language="ruby">Spigot.resource :user do
+  full_name :name
+  contact do
+    login :email
+    phone :telephone
   end
 end</code></pre>
               </div>
@@ -444,14 +439,10 @@ end</code></pre>
                 </p>
 
                 <p>In this code block, we are taking the value that is present in the API data under the <code>username</code> key and interpolating the value into a static url to build our database's value for the user's URL</p>
-                <pre><code data-language="ruby">Spigot.define do
-  service :twitter do
-    resource :user do
-      full_name :name
-      username :url do |value|
-        "https://twitter.com/#{value}"
-      end
-    end
+                <pre><code data-language="ruby">Spigot.resource(:user) do
+  full_name :name
+  username :url do |value|
+    "https://twitter.com/#{value}"
   end
 end</code></pre>
               </div>
@@ -467,15 +458,11 @@ end</code></pre>
                   <dt><code>primary_key</code></dt>
                   <dd>The attribute used to execute a select statement when querying this resource's table</dd>
                 </dl>
-                <pre><code data-language="ruby">Spigot.define do
-  service :twitter do
-    resource :user do
-      full_name :name
-      login :email
-      options do
-        primary_key :email
-      end
-    end
+                <pre><code data-language="ruby">Spigot.resource(:user) do
+  full_name :name
+  login :email
+  options do
+    primary_key :email
   end
 end</code></pre>
               </div>

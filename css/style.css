@@ -224,6 +224,13 @@ header .navigation a:hover{
   border: #666;
   text-align: center;
 }
+.applinks .actionbuttons {
+  margin-top: 10px;
+}
+.applinks iframe {
+  margin-left: 10px;
+}
+
 
 /* Contact */
 
@@ -649,6 +656,28 @@ margin-bottom:0px;
   font-style:italic;
 }
 
+.features .row {
+  text-align: left;
+}
+
+.features .row p {
+   margin-top: 20px;
+}
+
+.features .row + .row {
+   margin-top: 50px;
+}
+
+.features .row .col-md-5 {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.features .row .col-md-12 {
+   margin-top: 20px;
+   text-align: center;
+}
+
 /* Features */
 
 /* Shots */
@@ -717,6 +746,10 @@ margin-bottom:0px;
    -o-transition: background 1s ease;
    -ms-transition: background 1s ease;
    transition: background 1s ease;
+}
+
+.shots .shotcontent .row {
+   margin-bottom: 60px;
 }
 
 /* Footer */
