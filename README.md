@@ -31,7 +31,7 @@ This becomes particularly difficult as you start having multiple external source
 Spigot uses a ruby api to map the data you receive to the columns of your database. As a result, you're
 able to convey a mapping of their structure into your attributes in a concise format. Afterwards, you can accomplish the above work in a simple statement:
 
-    User.find_or_create_by_api(:github, params[:data])
+    User.find_or_create_by_api(params[:data])
 
 Much better.
 
