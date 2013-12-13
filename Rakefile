@@ -1,7 +1,3 @@
 require "bundler/gem_tasks"
-
-task :spec do
-  system("rspec spec/")
-end
-
+task(:spec){system("rspec spec/")}
 task :default => [:spec]

@@ -116,7 +116,6 @@ module Spigot
           login     :username
           options do
             primary_key :username
-            foreign_key :login
           end
         end
       end
@@ -127,7 +126,6 @@ module Spigot
           login     :username
           options do
             primary_key :username
-            foreign_key :login
           end
         end
       end

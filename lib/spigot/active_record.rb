@@ -13,7 +13,7 @@ module Spigot
 
       ## #find_all_by_api(params)
       # Build a query based on the defined map for this resource
-      # to find all matching records in the database
+      # to find all matching records in the database.
       #
       # @param params [Hash] Data as received from the api with optional service key
       def find_all_by_api(params={})
@@ -23,7 +23,7 @@ module Spigot
 
       ## #create_by_api(params)
       # Insert mapped data into the calling model's table. Does not
-      # do any checks on existing content already present in the database
+      # perform any checks on existing content already present in the database
       #
       # @param params [Hash] Data as received from the api with optional service key
       def create_by_api(params={})
@@ -32,9 +32,9 @@ module Spigot
       end
 
       ## #update_by_api(params)
-      # Queries the database to find an existing record, based on the options
-      # provided to spigot. If a record is found, it updates that record
-      # with any new data received by the API
+      # Queries the database to find an existing record.
+      # If a record is found, it updates that record
+      # with any new formatted data received by the API
       #
       # @param params [Hash] Data as received from the api with optional service key
       def update_by_api(params={})
@@ -46,7 +46,7 @@ module Spigot
 
       ## #find_or_create_by_api(params)
       # Queries the database to find an existing record. If that record is found
-      # simply return it, otherwise create a new record and return it. This does
+      # simply return it, otherwise return a newly created record. This does
       # not update any existing record. If you want that, use `create_or_update_by_api`
       #
       # @param params [Hash] Data as received from the api with optional service key
@@ -74,10 +74,6 @@ module Spigot
       def find_by_translator(translator)
         if invalid_primary_keys?(translator)
           raise Spigot::InvalidSchemaError, "The #{translator.primary_key} column does not exist on #{self.to_s}"
-        end
-
-        if translator.id.blank?
-          Spigot.logger.warn "   <Spigot::Warning> No #{translator.service} API data found at :#{translator.foreign_key}"
         end
 
         return [] if translator.conditions.blank?

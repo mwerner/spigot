@@ -31,4 +31,4 @@ class ActiveUser < ActiveRecord::Base
   include Spigot::Base
 end
 
-user = ActiveUser.create(name: 'Matt', username: 'mttwrnr', token: 'abc123')
+user = ActiveUser.create(name: 'Matt', username: 'mwerner', token: 'abc123')

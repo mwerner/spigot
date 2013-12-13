@@ -4,30 +4,17 @@ require 'net/http'
 require 'uri'
 
 ActiveRecord::Base.logger = Spigot.logger
-ActiveRecord::Base.establish_connection({
-  :adapter => "sqlite3",
-  :database => ':memory:'
-})
+require_relative '../script/active_record'
 
-ActiveRecord::Schema.define do
-  self.verbose = false
-  create_table :users, :force => true do |t|
-    t.integer :github_id
-    t.string  :username
-    t.string  :image_url
-    t.string  :profile_url
-  end
-end
-
-class User < ActiveRecord::Base
+class ActiveUser < ActiveRecord::Base
   include Spigot::Base
 end
 
-Spigot.resource :user do
+Spigot.resource :active_user do
   id :github_id
+  name :name
   login :username
-  avatar_url :image_url
-  url :profile_url
+  gravatar_id :token
   options do
     primary_key :username
   end
@@ -39,18 +26,20 @@ response = Net::HTTP.get_response URI.parse(profile_url)
 puts "Parse the response:\n `data = JSON.parse(response.body)`"
 data = JSON.parse(response.body)
 
-puts "\nIt Returned a whole bunch of data: "
-puts "#{data.inspect[0..100]}... etc, etc, etc (#{data.keys.length} more keys received)"
+puts "\nIt returns a whole bunch of data: "
+puts "#{data.inspect[0..100]} ... etc, etc, etc (#{data.keys.length} more keys received)"
 
-puts "\nWe don't want to use all of it. We can define a map on Spigot:"
-puts User.spigot.map.to_hash.inspect
+puts "\nWe don't want to use all of it. Let's define a map on Spigot:"
+puts ActiveUser.spigot.map.to_hash.inspect
 puts "Each key is an attribute received from the API, and the corresponding value is our column name."
 
-puts "\nWe define our primary key in the spigot `User` options, so we know how to check if the record already exists:"
-puts User.spigot.options.inspect
+puts "\nWe define our primary key in the spigot `ActiveUser` options, so we know how to check if the record already exists:"
+puts ActiveUser.spigot.options.inspect
 
+puts "\nWe can create a new user with one nice and easy line: `ActiveUser.find_or_create_by_api(data)`"
+puts ActiveUser.find_or_create_by_api(data).inspect
 
-puts "\nWe can create a new user with one nice and easy line: `User.find_or_create_by_api(data)`"
-puts User.find_or_create_by_api(data).inspect
+puts "\nThen running it again, we'll see Spigot returns the existing record."
+puts ActiveUser.find_or_create_by_api(data).inspect
 
 puts "\nEnjoy!"

@@ -12,16 +12,6 @@ module Spigot
         @primary_key = key
       end
 
-      def foreign_key(key=nil)
-        return @foreign_key if key.nil?
-        @foreign_key = key
-      end
-
-      def conditions(attributes=nil)
-        return @attributes if attributes.nil?
-        @conditions = attributes
-      end
-
     end
   end
 end

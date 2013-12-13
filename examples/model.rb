@@ -48,11 +48,11 @@ class User
   end
 
   def self.api_data
-    { full_name: 'matthew', login: 'mwerner' }
+    { id: '9238475', full_name: 'matthew', login: 'mwerner' }
   end
 
   def self.build
-    new_by_api(:github, api_data)
+    new_by_api({github: api_data})
   end
 end
 

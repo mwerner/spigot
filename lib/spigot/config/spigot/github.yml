@@ -1,7 +1,0 @@
-user:
-  name:
-    attribute: 'name'
-    options:
-      id: true
-
-  username: 'login'

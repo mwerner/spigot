@@ -5,6 +5,12 @@ module Spigot
     #
     # Spigot::Proxy provides accessor methods used by the implementation
     # that could be useful for development or custom behavior
+    #
+    # Usage:
+    #
+    # User.spigot.find_or_create(data)
+    #
+    # User.spigot(:twitter).find_or_create(data)
 
     attr_reader :resource, :service
 

@@ -22,15 +22,6 @@ describe Spigot::Translator do
     end
   end
 
-  context '.id' do
-    let(:subject){ Spigot::Translator.new(User.new, :github, Spigot::Data::User.basic) }
-    before{ Spigot::Mapping::User.basic }
-    it 'returns the value at the foreign_key' do
-      subject.stubs(:foreign_key).returns('id')
-      subject.id.should eq('123')
-    end
-  end
-
   context '.format' do
     context 'with a missing resource map' do
       let(:subject){ Spigot::Translator.new(User.new, :github, Spigot::Data::User.basic) }
@@ -192,14 +183,6 @@ describe Spigot::Translator do
     end
   end
 
-  context '#lookup' do
-    let(:subject){Spigot::Translator.new(User.new, :github, {a: '1'})}
-
-    it 'returns the value at a given key' do
-      subject.lookup(:a).should eq('1')
-    end
-  end
-
   context '#conditions' do
     let(:data){ Spigot::Data::User.basic }
     let(:subject){Spigot::Translator.new(User.new, :github, data)}
@@ -231,20 +214,12 @@ describe Spigot::Translator do
       it '#primary_key is the name of the service_id' do
         subject.primary_key.should eq('github_id')
       end
-
-      it '#foreign_key is id' do
-        subject.foreign_key.should eq('id')
-      end
     end
 
     context 'with options provided' do
       before{ Spigot::Mapping::User.with_options }
       it 'reads a primary key from the mapping' do
         subject.primary_key.should eq(:username)
-      end
-
-      it 'reads a foreign key from the mapping' do
-        subject.foreign_key.should eq(:login)
       end
 
       it 'reads options' do

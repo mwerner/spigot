@@ -24,7 +24,6 @@ module Spigot
           full_name :name
           options do
             primary_key :username
-            foreign_key :login
           end
         end
       end
@@ -36,7 +35,6 @@ module Spigot
           auth_token :token
           options do
             primary_key :token
-            foreign_key :auth_token
           end
         end
       end

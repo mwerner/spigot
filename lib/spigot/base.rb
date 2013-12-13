@@ -11,7 +11,7 @@ module Spigot
       # Instantiate a new object mapping the api data to the calling object's attributes
       #
       # @param params [Hash] Data as received from the api with optional service key
-      def new_by_api(params)
+      def new_by_api(params={})
         Record.instantiate(self, formatted_api_data(params))
       end
 

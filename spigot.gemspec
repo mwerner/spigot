@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["m@mjw.io"]
   spec.description   = %q{Spigot provides a clean interface translating API data into context relevant objects}
   spec.summary       = spec.description
-  spec.homepage      = "http://github.com/mwerner/spigot"
+  spec.homepage      = "http://mwerner.github.io/spigot/"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -24,6 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "hashie"
   spec.add_development_dependency "simplecov"
   spec.add_development_dependency "rspec"
-  spec.add_development_dependency "mocha"
   spec.add_development_dependency "sqlite3"
 end
