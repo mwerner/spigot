@@ -17,8 +17,7 @@ module Spigot
       #
       # @param params [Hash] Data as received from the api with optional service key
       def find_all_by_api(params={})
-        service, data = Spigot::Map::Service.extract(params)
-        find_by_translator Translator.new(self, service, data)
+        find_by_translator params_to_translator(params)
       end
 
       ## #create_by_api(params)
@@ -27,8 +26,7 @@ module Spigot
       #
       # @param params [Hash] Data as received from the api with optional service key
       def create_by_api(params={})
-        service, data = Spigot::Map::Service.extract(params)
-        create_by_translator Translator.new(self, service, data)
+        create_by_translator params_to_translator(params)
       end
 
       ## #update_by_api(params)
@@ -38,8 +36,7 @@ module Spigot
       #
       # @param params [Hash] Data as received from the api with optional service key
       def update_by_api(params={})
-        service, data = Spigot::Map::Service.extract(params)
-        babel = Translator.new(self, service, data)
+        babel = params_to_translator(params)
         record = find_by_translator(babel).first
         update_by_translator(babel, record) if record.present?
       end
@@ -51,8 +48,7 @@ module Spigot
       #
       # @param params [Hash] Data as received from the api with optional service key
       def find_or_create_by_api(params={})
-        service, data = Spigot::Map::Service.extract(params)
-        babel = Translator.new(self, service, data)
+        babel = params_to_translator(params)
         find_by_translator(babel).first || create_by_translator(babel)
       end
 
@@ -63,13 +59,17 @@ module Spigot
       #
       # @param params [Hash] Data as received from the api with optional service key
       def create_or_update_by_api(params={})
-        service, data = Spigot::Map::Service.extract(params)
-        babel = Translator.new(self, service, data)
+        babel = params_to_translator(params)
         record = find_by_translator(babel).first
         record.present? ? update_by_translator(babel, record) : create_by_translator(babel)
       end
 
       private
+
+      def params_to_translator(params)
+        service, data = Spigot::Map::Service.extract(params)
+        Translator.new(self, service, data)
+      end
 
       def find_by_translator(translator)
         if invalid_primary_keys?(translator)

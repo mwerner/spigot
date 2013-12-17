@@ -15,6 +15,17 @@ Spigot.resource(:active_user) do
       "https://github.com/#{value}"
     end
   end
+  options do
+    primary_key :username
+  end
+end
+
+Spigot.resource(:post) do
+  headline :title
+  content  :body
+  options do
+    primary_key :username
+  end
 end
 
 Spigot.service(:twitter) do
@@ -25,10 +36,16 @@ Spigot.service(:twitter) do
 end
 
 ActiveRecord::Base.logger = Spigot.logger
-require File.join(Spigot.root, 'spec', 'support', 'active_record')
+require File.join(Spigot.root, 'script', 'active_record')
 
 class ActiveUser < ActiveRecord::Base
   include Spigot::Base
+  has_many :posts
+end
+
+class Post < ActiveRecord::Base
+  include Spigot::Base
+  belongs_to :user
 end
 
 user = ActiveUser.create(name: 'Matt', username: 'mwerner', token: 'abc123')
