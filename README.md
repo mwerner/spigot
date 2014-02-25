@@ -1,7 +1,8 @@
 # Spigot
 
-[![Build Status](https://travis-ci.org/mwerner/spigot.png?branch=master)](https://travis-ci.org/mwerner/spigot)
-[![Code Climate](https://codeclimate.com/github/mwerner/spigot.png)](https://codeclimate.com/github/mwerner/spigot)
+[![Build Status](https://travis-ci.org/mwerner/spigot.png?branch=master)](https://travis-ci.org/mwerner/spigot, "Travis CI")
+[![Code Climate](https://codeclimate.com/github/mwerner/spigot.png)](https://codeclimate.com/github/mwerner/spigot, "Code Climate")
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mwerner/spigot/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Spigot is an attempt to bring some sanity to consuming external API data. Without Spigot, you need
 to do this manual mapping at creation, such as:
@@ -59,7 +60,3 @@ Or install it yourself as:
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mwerner/spigot/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
