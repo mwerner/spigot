@@ -11,6 +11,13 @@ describe Spigot::ActiveRecord do
         subject.find_by_api({full_name: 'Dean Martin'})
       }.to raise_error(Spigot::MissingResourceError)
     end
+
+    it 'requires valid primary_keys' do
+      Spigot::Mapping::ActiveUser.invalid_primary_key
+      expect {
+        subject.find_by_api(github: {full_name: 'Dean Martin'})
+      }.to raise_error(Spigot::InvalidSchemaError)
+    end
   end
 
   context 'with valid mapping' do

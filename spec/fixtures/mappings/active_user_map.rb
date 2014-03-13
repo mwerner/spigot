@@ -28,6 +28,16 @@ module Spigot
         end
       end
 
+      def self.invalid_primary_key
+        template do
+          login :username
+          full_name :name
+          options do
+            primary_key :doesnotexist
+          end
+        end
+      end
+
       def self.non_unique_keys
         template do
           login :username

@@ -10,6 +10,12 @@ describe Spigot::Map::Base do
     end
   end
 
+  context '#inspect' do
+    it 'returns a string' do
+      subject.inspect.should match(/Spigot::Map::Base/)
+    end
+  end
+
   context '.define' do
     it 'accepts a block' do
       Spigot::Map::Service.should_receive(:class_eval)

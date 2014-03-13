@@ -227,4 +227,16 @@ describe Spigot::Translator do
       end
     end
   end
+
+  context '#resource_map' do
+    let(:subject){ Spigot::Translator.new(User.new) }
+    context 'without a service' do
+      before{ Spigot::Mapping::User.basic }
+      it 'raises a missing resource error' do
+        expect{
+          subject.resource_map
+        }.to raise_error(Spigot::MissingResourceError)
+      end
+    end
+  end
 end

@@ -28,5 +28,10 @@ describe Spigot do
       Logger.should_receive(:new).with(STDOUT)
       Spigot.logger
     end
+
+    it 'sets level and formatter' do
+      Logger.should_receive(:new).and_return(mock(:level= => true, :formatter= => true))
+      Spigot.logger
+    end
   end
 end

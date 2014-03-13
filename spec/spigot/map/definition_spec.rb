@@ -19,7 +19,6 @@ describe Spigot::Map::Definition do
   end
 
   context '#define' do
-
     it 'returns a definition with the given key and value' do
       subject = Spigot::Map::Definition.define(resource, :foo, 'bar')
       subject.instance_variable_get(:@name).should eq(:foo)
@@ -39,6 +38,16 @@ describe Spigot::Map::Definition do
       subject = Spigot::Map::Definition.define(resource, :foo){|val| "formatted-#{val}" }
       subject.instance_variable_get(:@parse).should_not be_nil
       subject.instance_variable_get(:@children).length.should eq(0)
+    end
+  end
+
+  context '#to_hash' do
+    it 'returns a hash of values' do
+      subject = Spigot::Map::Definition.define(resource, :foo) do
+        bar :baz
+        qux :mjw
+      end
+      subject.to_hash.should eq(foo: {bar: :baz, qux: :mjw})
     end
   end
 
