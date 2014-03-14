@@ -1,7 +1,6 @@
 module Spigot
   module Map
     class Base
-
       attr_reader :services
 
       def initialize
@@ -14,7 +13,7 @@ module Spigot
       end
 
       def update(name, service)
-        @services.reject!{|s| s.name == name.to_s.underscore.to_sym}
+        @services.reject! { |s| s.name == name.to_s.underscore.to_sym }
         @services << service
       end
 
@@ -23,14 +22,14 @@ module Spigot
       end
 
       def service(name)
-        services.detect{|service| service.name == name.to_s.underscore.to_sym}
+        services.find { |service| service.name == name.to_s.underscore.to_sym }
       end
 
       def to_hash
-        hash = {};
+        hash = {}
         services.each do |service|
           service_map = {}
-          service.resources.each{|resource| service_map.merge!(resource.to_hash) }
+          service.resources.each { |resource| service_map.merge!(resource.to_hash) }
           hash.merge!(service.name.to_sym => service_map)
         end
         hash

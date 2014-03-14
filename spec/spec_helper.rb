@@ -6,8 +6,8 @@ require 'spigot'
 require 'hashie'
 require 'active_record'
 
-require File.join(Spigot.root, "script/active_record.rb")
-Dir[File.join(Spigot.root, "spec/fixtures/**/*.rb")].each {|f| require f}
+require File.join(Spigot.root, 'script/active_record.rb')
+Dir[File.join(Spigot.root, 'spec/fixtures/**/*.rb')].each { |f| require f }
 
 # Mocked Classes
 User = Class.new(Hashie::Mash) do

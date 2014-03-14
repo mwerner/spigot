@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Spigot::Record do
-  let(:resource){ActiveUser}
-  let(:data){ {username: 'dino', name: 'Dean Martin'} }
-  let(:subject){ Spigot::Record.new(:github, resource, data) }
+  let(:resource) { ActiveUser }
+  let(:data) { { username: 'dino', name: 'Dean Martin' } }
+  let(:subject) { Spigot::Record.new(:github, resource, data) }
 
   context '#instantiate' do
     it 'exectutes instantiate on an instance' do
@@ -24,7 +24,7 @@ describe Spigot::Record do
       Spigot::Mapping::ActiveUser.stub
       expect {
         Spigot::Record.create(:github, resource, [data, data, data])
-      }.to change{ ActiveUser.count }.by(3)
+      }.to change { ActiveUser.count }.by(3)
     end
 
     context 'with associations' do
@@ -42,19 +42,19 @@ describe Spigot::Record do
 
       it 'handles an association' do
         expect {
-          Spigot::Record.create(:github, Event, {github_id: 123, name: 'Push', active_user: data})
-        }.to change{ ActiveUser.count }.by(1)
+          Spigot::Record.create(:github, Event, github_id: 123, name: 'Push', active_user: data)
+        }.to change { ActiveUser.count }.by(1)
       end
 
       it 'handles an array of associations' do
         values = [
-          {github_id: 123, name: 'Push', active_user: data},
-          {github_id: 456, name: 'Comment', active_user: data},
-          {github_id: 789, name: 'Commit', active_user: data} ]
+          { github_id: 123, name: 'Push', active_user: data },
+          { github_id: 456, name: 'Comment', active_user: data },
+          { github_id: 789, name: 'Commit', active_user: data }]
 
         expect {
           Spigot::Record.create(:github, Event, values)
-        }.to change{ ActiveUser.count }.by(3)
+        }.to change { ActiveUser.count }.by(3)
       end
 
       it 'handles nested associations' do
@@ -79,11 +79,11 @@ describe Spigot::Record do
           end
         end
 
-        user_data = {username: 'dino', name: 'Dean Martin', profile: {image_url: 'abc'}}
-        event_data = {github_id: 123, name: 'Push', active_user: user_data}
-        expect{
-          record = Spigot::Record.create(:github, Event, event_data)
-        }.to change{ Profile.count }.by(1)
+        user_data = { username: 'dino', name: 'Dean Martin', profile: { image_url: 'abc' } }
+        event_data = { github_id: 123, name: 'Push', active_user: user_data }
+        expect {
+          Spigot::Record.create(:github, Event, event_data)
+        }.to change { Profile.count }.by(1)
 
         Profile.last.image_url.should eq('abc')
       end

@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Spigot::Base do
-  let(:data){Spigot::Data::User.basic}
-  before{ Spigot::Mapping::ActiveUser.stub }
+  let(:data) { Spigot::Data::User.basic }
+  before { Spigot::Mapping::ActiveUser.stub }
 
   context '#new_by_api' do
     it 'instantiates a record' do

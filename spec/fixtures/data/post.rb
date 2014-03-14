@@ -3,7 +3,7 @@ module Spigot
     class Post
       class << self
         def basic
-          {'title' => 'Brief Article', 'body' => 'lorem ipsum'}
+          { 'title' => 'Brief Article', 'body' => 'lorem ipsum' }
         end
       end
     end

@@ -41,7 +41,7 @@ class User
 
   attr_reader :name, :username
 
-  def initialize(params={})
+  def initialize(params = {})
     params.each_pair do |k, v|
       instance_variable_set("@#{k}".to_sym, v)
     end
@@ -52,11 +52,11 @@ class User
   end
 
   def self.build
-    new_by_api({github: api_data})
+    new_by_api(github: api_data)
   end
 end
 
-puts "Map Built:"
+puts 'Map Built:'
 puts Spigot.config.map.to_hash
 
 user = User.build

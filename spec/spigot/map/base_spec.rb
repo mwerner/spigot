@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Spigot::Map::Base do
-  let(:subject){Spigot::Map::Base.new}
-  let(:service){Spigot::Map::Service.new(:github)}
+  let(:subject) { Spigot::Map::Base.new }
+  let(:service) { Spigot::Map::Service.new(:github) }
 
   context '#initialize' do
     it 'initializes a services array' do
@@ -19,7 +19,7 @@ describe Spigot::Map::Base do
   context '.define' do
     it 'accepts a block' do
       Spigot::Map::Service.should_receive(:class_eval)
-      subject.define{'foo'}
+      subject.define { 'foo' }
     end
 
     it 'does not require a block' do
@@ -54,8 +54,8 @@ describe Spigot::Map::Base do
     end
 
     it 'allows multiple updates' do
-      subject.define{ service(:github) }
-      subject.define{ service(:twitter) }
+      subject.define { service(:github) }
+      subject.define { service(:twitter) }
 
       subject.services.length.should eq(2)
     end
@@ -78,7 +78,7 @@ describe Spigot::Map::Base do
   context '.to_hash' do
     it 'returns a hash of current services' do
       subject.update(:github, service)
-      subject.to_hash.should eq({github: {}})
+      subject.to_hash.should eq(github: {})
     end
   end
 

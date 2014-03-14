@@ -1,7 +1,6 @@
- module Spigot
+module Spigot
   module Map
     class Service
-
       attr_reader :name
       attr_accessor :resources
 
@@ -17,7 +16,7 @@
       end
 
       def self.resource(name, &block)
-        service(:any){ resource(name, &block) }
+        service(:any) { resource(name, &block) }
       end
 
       def self.find(name)
@@ -33,7 +32,7 @@
       end
 
       def [](name)
-        resources.detect{|r| r.instance_variable_get(:@name).to_sym == name.to_sym}
+        resources.find { |r| r.instance_variable_get(:@name).to_sym == name.to_sym }
       end
 
       def self.extract(params)
@@ -55,7 +54,6 @@
       def self.current_map
         Spigot.config.map
       end
-
     end
   end
 end

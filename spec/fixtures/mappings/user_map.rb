@@ -1,7 +1,6 @@
 module Spigot
   module Mapping
     class User
-
       def self.basic
         template do
           full_name :name
@@ -136,12 +135,11 @@ module Spigot
         Spigot.define do
           service :github do
             resource :user do
-              self.instance_eval(&block)
+              instance_eval(&block)
             end
           end
         end
       end
-
     end
   end
 end

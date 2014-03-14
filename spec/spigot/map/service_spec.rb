@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe Spigot::Map::Service do
-  let(:klass){ Spigot::Map::Service }
-  let(:subject){ klass.new(:github) }
+  let(:klass) { Spigot::Map::Service }
+  let(:subject) { klass.new(:github) }
 
-  before{ Spigot::Map::Base.new }
+  before { Spigot::Map::Base.new }
 
   context '#initialize' do
     it 'assigns a name' do
@@ -20,12 +20,12 @@ describe Spigot::Map::Service do
     it 'works with a block' do
       Spigot::Map::Service.should_receive(:new).with(:github)
 
-      klass.service(:github){'foo'}
+      klass.service(:github) { 'foo' }
     end
 
     it 'works without a block' do
       Spigot::Map::Service.should_receive(:new).with(:github)
-      expect{
+      expect {
         klass.service(:github)
       }.to_not raise_error(ArgumentError)
     end
@@ -36,7 +36,7 @@ describe Spigot::Map::Service do
     end
 
     context 'duplicate services' do
-      let(:service){Spigot::Map::Service.new(:github)}
+      let(:service) { Spigot::Map::Service.new(:github) }
       before do
         Spigot.config.map.update(:github, service)
       end
@@ -44,7 +44,7 @@ describe Spigot::Map::Service do
       it 'uses an existing service if already defined' do
         service.should_receive(:instance_eval)
         Spigot.config.map.should_receive(:update).with(:github, service)
-        klass.service(:github){'foo'}
+        klass.service(:github) { 'foo' }
       end
 
       it 'does not duplicate services' do
@@ -55,9 +55,9 @@ describe Spigot::Map::Service do
   end
 
   context '#extract' do
-    let(:data){{a: 1}}
+    let(:data) { { a: 1 } }
     context 'with no map defined' do
-      before{ Spigot.config.reset }
+      before { Spigot.config.reset }
       it 'returns passed params' do
         klass.extract(data).should eq(data)
       end
@@ -80,7 +80,7 @@ describe Spigot::Map::Service do
 
       it 'does not return an unmatched service' do
         Spigot::Mapping::ActiveUser.stub
-        klass.extract(twitter: data).should eq([nil, {twitter: data}])
+        klass.extract(twitter: data).should eq([nil, { twitter: data }])
       end
 
       it 'assumes no service when it receives an array' do
@@ -93,11 +93,11 @@ describe Spigot::Map::Service do
   context '.resource' do
     it 'builds a resource' do
       Spigot::Map::Resource.should_receive(:new).with(:user)
-      subject.resource(:user){'foo'}
+      subject.resource(:user) { 'foo' }
     end
 
     it 'does not require a block' do
-      expect{
+      expect {
         subject.resource(:user)
       }.to_not raise_error(ArgumentError)
     end
@@ -106,9 +106,9 @@ describe Spigot::Map::Service do
   context '.reset' do
     it 'resets the resources' do
       subject.resource(:user)
-      expect{
+      expect {
         subject.reset
-      }.to change{subject.resources.length}.by(-1)
+      }.to change { subject.resources.length }.by(-1)
     end
   end
 

@@ -1,7 +1,6 @@
 module Spigot
   module Mapping
     class ActiveUser
-
       def self.stub
         template do
           login :username
@@ -55,12 +54,11 @@ module Spigot
         Spigot.define do
           service :github do
             resource :active_user do
-              self.instance_eval(&block)
+              instance_eval(&block)
             end
           end
         end
       end
-
     end
   end
 end

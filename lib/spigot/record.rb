@@ -1,6 +1,5 @@
 module Spigot
   class Record
-
     ## Record
     #
     # Spigot::Record is responsible for the instantiation and creation
@@ -14,7 +13,7 @@ module Spigot
     # @param resource [Object] This is the class implementing the record.
     # @param data     [Hash]   The already formatted data used to produce the object.
     # @param record   [Object] Optional record of `resource` type already in database.
-    def initialize(service, resource, data, record=nil)
+    def initialize(service, resource, data, record = nil)
       @resource     = resource
       @data         = data
       @record       = record
@@ -75,7 +74,7 @@ module Spigot
     private
 
     def create_by_array
-      data.map{|record| create_by_hash(record) }
+      data.map { |record| create_by_hash(record) }
     end
 
     def create_by_hash(record)
@@ -95,6 +94,5 @@ module Spigot
         end
       end
     end
-
   end
 end

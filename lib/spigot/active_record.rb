@@ -1,13 +1,12 @@
 module Spigot
   module ActiveRecord
     module ClassMethods
-
       ## #find_by_api(params)
       # Build a query based on the defined map for this resource
       # to find a single matching record in the database
       #
       # @param params [Hash] Data as received from the api with optional service key
-      def find_by_api(params={})
+      def find_by_api(params = {})
         find_all_by_api(params).first
       end
 
@@ -16,7 +15,7 @@ module Spigot
       # to find all matching records in the database.
       #
       # @param params [Hash] Data as received from the api with optional service key
-      def find_all_by_api(params={})
+      def find_all_by_api(params = {})
         find_by_translator params_to_translator(params)
       end
 
@@ -25,7 +24,7 @@ module Spigot
       # perform any checks on existing content already present in the database
       #
       # @param params [Hash] Data as received from the api with optional service key
-      def create_by_api(params={})
+      def create_by_api(params = {})
         create_by_translator params_to_translator(params)
       end
 
@@ -35,7 +34,7 @@ module Spigot
       # with any new formatted data received by the API
       #
       # @param params [Hash] Data as received from the api with optional service key
-      def update_by_api(params={})
+      def update_by_api(params = {})
         babel = params_to_translator(params)
         record = find_by_translator(babel).first
         update_by_translator(babel, record) if record.present?
@@ -47,7 +46,7 @@ module Spigot
       # not update any existing record. If you want that, use `create_or_update_by_api`
       #
       # @param params [Hash] Data as received from the api with optional service key
-      def find_or_create_by_api(params={})
+      def find_or_create_by_api(params = {})
         babel = params_to_translator(params)
         find_by_translator(babel).first || create_by_translator(babel)
       end
@@ -58,7 +57,7 @@ module Spigot
       # creates a new record and returns the newly created record.
       #
       # @param params [Hash] Data as received from the api with optional service key
-      def create_or_update_by_api(params={})
+      def create_or_update_by_api(params = {})
         babel = params_to_translator(params)
         record = find_by_translator(babel).first
         record.present? ? update_by_translator(babel, record) : create_by_translator(babel)
@@ -73,11 +72,12 @@ module Spigot
 
       def find_by_translator(translator)
         if invalid_primary_keys?(translator)
-          raise Spigot::InvalidSchemaError, "The #{translator.primary_key} column does not exist on #{self.to_s}"
+          message = "The #{translator.primary_key} column does not exist on #{to_s}"
+          raise Spigot::InvalidSchemaError, message
         end
 
         return [] if translator.conditions.blank?
-        self.where(translator.conditions)
+        where(translator.conditions)
       end
 
       def create_by_translator(translator)
@@ -91,11 +91,10 @@ module Spigot
 
       def invalid_primary_keys?(translator)
         [*translator.primary_key].each do |key|
-          return true unless self.column_names.include?(key.to_s)
+          return true unless column_names.include?(key.to_s)
         end
         false
       end
     end
-
   end
 end

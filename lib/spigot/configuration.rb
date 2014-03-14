@@ -21,7 +21,7 @@ module Spigot
     end
 
     def reset
-      @@defaults.each_pair{|k,v| self.send("#{k}=",v)}
+      @@defaults.each_pair { |k, v| send("#{k}=", v) }
     end
   end
 end

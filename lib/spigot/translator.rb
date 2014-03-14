@@ -3,7 +3,6 @@ require 'hashie'
 
 module Spigot
   class Translator
-
     ## Translator
     #
     # Translator looks up the key for the resource class name of the calling class,
@@ -23,7 +22,7 @@ module Spigot
     # @param resource [Object] This is the class implementing the translator.
     # @param service  [Symbol] Translation map specific to incoming data.
     # @param data     [Hash] Data in the format received by the api (optional).
-    def initialize(resource, service=nil, data={})
+    def initialize(resource, service = nil, data = {})
       @service = service
       @resource = resource.is_a?(Class) ? resource : resource.class
       raise InvalidResourceError, 'You must provide a calling resource' if resource.nil?
@@ -33,7 +32,7 @@ module Spigot
     ## #format
     # Formats the hash of data passed in to the format specified in the Spigot defintion.
     def format
-      @format ||= data.is_a?(Array) ? data.map{|el| parse(el) } : parse(data)
+      @format ||= data.is_a?(Array) ? data.map { |el| parse(el) } : parse(data)
     end
 
     ## #conditions
@@ -41,12 +40,12 @@ module Spigot
     def conditions
       values = []
       if format.is_a?(Array)
-        values = format.map{|item| item[primary_key] }
+        values = format.map { |item| item[primary_key] }
       else
         values = format[primary_key]
       end
 
-      {primary_key => values}
+      { primary_key => values }
     end
 
     ## #options
@@ -72,7 +71,7 @@ module Spigot
       @resource_map
     end
 
-    def has_resource?(key)
+    def resource_map?(key)
       service_map[key.to_s.underscore]
     end
 
@@ -101,6 +100,5 @@ module Spigot
 
       @service_map
     end
-
   end
 end

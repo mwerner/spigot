@@ -1,7 +1,8 @@
-require "spigot/version"
-require "spigot/errors"
-require "spigot/patch"
+require 'spigot/version'
+require 'spigot/errors'
+require 'spigot/patch'
 
+# Parent module for Spigot
 module Spigot
   autoload :ActiveRecord,  'spigot/active_record'
   autoload :Base,          'spigot/base'
@@ -9,6 +10,7 @@ module Spigot
   autoload :Proxy,         'spigot/proxy'
   autoload :Record,        'spigot/record'
   autoload :Translator,    'spigot/translator'
+  # Spigot mapping and definition classes
   module Map
     autoload :Base,        'spigot/map/base'
     autoload :Definition,  'spigot/map/definition'
@@ -41,16 +43,17 @@ module Spigot
     Configuration.instance
   end
 
-  ##=> Support
+  # Support
   def self.root
     File.expand_path('../..', __FILE__)
   end
 
   def self.logger
     @log ||= Spigot.config.logger || begin
-      if buffer = Logger.new(STDOUT)
-        buffer.level = ($0 == 'irb' ? Logger::DEBUG : Logger::INFO)
-        buffer.formatter = proc{|severity, datetime, progname, msg| "#{msg}\n"}
+      buffer = Logger.new(STDOUT)
+      if buffer
+        buffer.level = ($PROGRAM_NAME == 'irb' ? Logger::DEBUG : Logger::INFO)
+        buffer.formatter = proc { |severity, datetime, progname, msg| "#{msg}\n" }
       end
       buffer
     end

@@ -48,4 +48,4 @@ class Post < ActiveRecord::Base
   belongs_to :user
 end
 
-user = ActiveUser.create(name: 'Matt', username: 'mwerner', token: 'abc123')
+ActiveUser.create(name: 'Matt', username: 'mwerner', token: 'abc123')

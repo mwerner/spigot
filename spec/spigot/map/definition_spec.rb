@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Spigot::Map::Definition do
-  let(:resource){Spigot::Map::Resource.new(:user)}
+  let(:resource) { Spigot::Map::Resource.new(:user) }
 
   context '#initialize' do
     it 'assigns variables' do
@@ -12,7 +12,7 @@ describe Spigot::Map::Definition do
 
     context '#with a block' do
       it 'assigns parse' do
-        subject = Spigot::Map::Definition.new(:foo, 'bar'){'baz'}
+        subject = Spigot::Map::Definition.new(:foo, 'bar') { 'baz' }
         subject.instance_variable_get(:@parse).should_not be_nil
       end
     end
@@ -30,13 +30,13 @@ describe Spigot::Map::Definition do
     it 'raises invalid schema if parsing data is not a hash' do
       subject = Spigot::Map::Definition.define(resource, :foo, ActiveUser)
       expect {
-        subject.parse({foo: 'b'})
+        subject.parse(foo: 'b')
       }.to raise_error(Spigot::InvalidSchemaError)
     end
 
     it 'does not attach the sub resource' do
       subject = Spigot::Map::Definition.define(resource, :foo, ActiveUser)
-      subject.parse({foo: {name: 'Dean'}}).should eq({active_user: {name: 'Dean'}})
+      subject.parse(foo: { name: 'Dean' }).should eq(active_user: { name: 'Dean' })
       subject.instance_variable_get(:@parse).should be_nil
       subject.instance_variable_get(:@children).length.should eq(0)
     end
@@ -47,7 +47,11 @@ describe Spigot::Map::Definition do
           bar :baz
           qux ActiveUser
         end
-        subject.parse({foo: {bar: 'a', qux: {name: 'Frank'}}}).should eq({baz: 'a', active_user: {name: 'Frank'}})
+        subject.parse({
+          foo: {
+            bar: 'a', qux: { name: 'Frank' }
+          }
+        }).should eq(baz: 'a', active_user: { name: 'Frank' })
       end
     end
   end
@@ -69,7 +73,7 @@ describe Spigot::Map::Definition do
     end
 
     it 'assigns a parse block' do
-      subject = Spigot::Map::Definition.define(resource, :foo){|val| "formatted-#{val}" }
+      subject = Spigot::Map::Definition.define(resource, :foo) { |val| "formatted-#{val}" }
       subject.instance_variable_get(:@parse).should_not be_nil
       subject.instance_variable_get(:@children).length.should eq(0)
     end
@@ -81,7 +85,7 @@ describe Spigot::Map::Definition do
         bar :baz
         qux :mjw
       end
-      subject.to_hash.should eq(foo: {bar: :baz, qux: :mjw})
+      subject.to_hash.should eq(foo: { bar: :baz, qux: :mjw })
     end
   end
 

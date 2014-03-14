@@ -1,16 +1,15 @@
 module Spigot
   module Map
     class Definition
-
-      def initialize(name, args=nil, parent=nil, &block)
+      def initialize(name, args = nil, parent = nil, &block)
         @name = name
         @value = args
         @children = []
-        self.instance_eval(&block) if block_given?
+        instance_eval(&block) if block_given?
         @parse = block unless @children.any?
       end
 
-      def self.define(resource, name, value=nil, &block)
+      def self.define(resource, name, value = nil, &block)
         definition = new(name, value, &block)
         resource.append definition
         definition
@@ -19,17 +18,19 @@ module Spigot
       def parse(data)
         return {} if data.nil?
 
-        data.default_proc = proc{|h, k| h.key?(k.to_s) ? h[k.to_s] : nil} if data.is_a?(Hash)
+        data.default_proc = proc { |h, k| h.key?(k.to_s) ? h[k.to_s] : nil } if data.is_a?(Hash)
         if @children.empty?
-          if !data.is_a?(Hash)
+          unless data.is_a?(Hash)
             raise Spigot::InvalidSchemaError, "Cannot extract :#{@name} from #{data.inspect}"
           end
+
           value = @parse ? @parse.call(data[@name]) : data[@name]
           if @value.is_a?(Class)
             translator = @value.spigot.translator
             translator.data = value
             return { @value.name.underscore.to_sym => translator.format }
           end
+
           return { @value.to_sym => value }
         end
 
@@ -45,21 +46,22 @@ module Spigot
       end
 
       def to_hash
-        result = {}; value = nil
+        result = {}
+        value = nil
         if @children.any?
           value = {}
-          @children.each{|child| value.merge!(child.to_hash) }
+          @children.each { |child| value.merge!(child.to_hash) }
         else
           value = @value
         end
 
-        result.merge!({@name => value})
+        result.merge!(@name => value)
       end
 
       # Spigot::Map::Definition.new(:user){ username :login }
       # Spigot::Map::Definition.new(:user){ username = :login }
       def method_missing(name, *args, &block)
-        name = name.to_s.gsub('=','').to_sym
+        name = name.to_s.gsub('=', '').to_sym
         @children << Spigot::Map::Definition.new(name, *args, &block)
       end
 
