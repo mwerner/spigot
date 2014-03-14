@@ -1,6 +1,7 @@
 require 'spigot/version'
 require 'spigot/errors'
 require 'spigot/patch'
+require 'logger'
 
 # Parent module for Spigot
 module Spigot
