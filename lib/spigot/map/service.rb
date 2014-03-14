@@ -38,6 +38,8 @@
 
       def self.extract(params)
         return params if current_map.nil?
+        return [nil, params] if params.is_a?(Array)
+
         name    = params.keys.first
         service = current_map.service(name)
 

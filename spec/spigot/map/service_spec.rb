@@ -82,6 +82,11 @@ describe Spigot::Map::Service do
         Spigot::Mapping::ActiveUser.stub
         klass.extract(twitter: data).should eq([nil, {twitter: data}])
       end
+
+      it 'assumes no service when it receives an array' do
+        Spigot::Mapping::ActiveUser.stub
+        klass.extract([data, data]).should eq([nil, [data, data]])
+      end
     end
   end
 

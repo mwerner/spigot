@@ -12,16 +12,9 @@ module Spigot
       #
       # @param params [Hash] Data as received from the api with optional service key
       def new_by_api(params={})
-        Record.instantiate(self, formatted_api_data(params))
-      end
-
-      # #self.formatted_api_data(params)
-      # Create a Spigot::Translator for the given service and return the formatted data.
-      #
-      # @param params [Hash] Data as received from the api with optional service key
-      def formatted_api_data(params={})
         service, data = Spigot::Map::Service.extract(params)
-        Translator.new(self, service, data).format
+        translator = Translator.new(self, service, data)
+        Record.instantiate(service, self, translator.format)
       end
 
       # #self.spigot

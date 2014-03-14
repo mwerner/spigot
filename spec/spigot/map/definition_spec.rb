@@ -18,6 +18,40 @@ describe Spigot::Map::Definition do
     end
   end
 
+  context '#parse' do
+    before do
+      Spigot.define do
+        resource :active_user do
+          name :name
+        end
+      end
+    end
+
+    it 'raises invalid schema if parsing data is not a hash' do
+      subject = Spigot::Map::Definition.define(resource, :foo, ActiveUser)
+      expect {
+        subject.parse({foo: 'b'})
+      }.to raise_error(Spigot::InvalidSchemaError)
+    end
+
+    it 'does not attach the sub resource' do
+      subject = Spigot::Map::Definition.define(resource, :foo, ActiveUser)
+      subject.parse({foo: {name: 'Dean'}}).should eq({active_user: {name: 'Dean'}})
+      subject.instance_variable_get(:@parse).should be_nil
+      subject.instance_variable_get(:@children).length.should eq(0)
+    end
+
+    context 'with children' do
+      it 'does not attach the sub resource' do
+        subject = Spigot::Map::Definition.define(resource, :foo) do
+          bar :baz
+          qux ActiveUser
+        end
+        subject.parse({foo: {bar: 'a', qux: {name: 'Frank'}}}).should eq({baz: 'a', active_user: {name: 'Frank'}})
+      end
+    end
+  end
+
   context '#define' do
     it 'returns a definition with the given key and value' do
       subject = Spigot::Map::Definition.define(resource, :foo, 'bar')

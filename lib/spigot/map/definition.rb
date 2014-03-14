@@ -21,7 +21,15 @@ module Spigot
 
         data.default_proc = proc{|h, k| h.key?(k.to_s) ? h[k.to_s] : nil} if data.is_a?(Hash)
         if @children.empty?
+          if !data.is_a?(Hash)
+            raise Spigot::InvalidSchemaError, "Cannot extract :#{@name} from #{data.inspect}"
+          end
           value = @parse ? @parse.call(data[@name]) : data[@name]
+          if @value.is_a?(Class)
+            translator = @value.spigot.translator
+            translator.data = value
+            return { @value.name.underscore.to_sym => translator.format }
+          end
           return { @value.to_sym => value }
         end
 

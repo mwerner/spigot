@@ -81,11 +81,11 @@ module Spigot
       end
 
       def create_by_translator(translator)
-        Record.create(self, translator.format)
+        Record.create(translator.service, self, translator.format)
       end
 
       def update_by_translator(translator, record)
-        Record.update(self, record, translator.format)
+        Record.update(translator.service, self, record, translator.format)
         record
       end
 

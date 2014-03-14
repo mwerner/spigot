@@ -6,7 +6,7 @@ module Spigot
     # Spigot::Record is responsible for the instantiation and creation
     # of objects with the formatted data received from Spigot::Translator.
 
-    attr_reader :resource, :record, :data
+    attr_reader :service, :resource, :record, :data, :map
 
     # #initialize(resource, data)
     # Method to initialize a record.
@@ -14,10 +14,15 @@ module Spigot
     # @param resource [Object] This is the class implementing the record.
     # @param data     [Hash]   The already formatted data used to produce the object.
     # @param record   [Object] Optional record of `resource` type already in database.
-    def initialize(resource, data, record=nil)
-      @resource = resource
-      @data     = data
-      @record   = record
+    def initialize(service, resource, data, record=nil)
+      @resource     = resource
+      @data         = data
+      @record       = record
+      @service      = service
+
+      proxy = resource.spigot(service)
+      @map          = proxy.map if proxy.present?
+      @associations = map ? map.associations : []
     end
 
     ## #instantiate(resource, data)
@@ -25,8 +30,8 @@ module Spigot
     #
     # @param resource [Object] This is the class implementing the record.
     # @param data     [Hash]   The already formatted data used to produce the object.
-    def self.instantiate(resource, data)
-      new(resource, data).instantiate
+    def self.instantiate(service, resource, data)
+      new(service, resource, data).instantiate
     end
 
     ## #create(resource, data)
@@ -34,8 +39,8 @@ module Spigot
     #
     # @param resource [Object] This is the class implementing the record.
     # @param data     [Hash]   The already formatted data used to produce the object.
-    def self.create(resource, data)
-      new(resource, data).create
+    def self.create(service, resource, data)
+      new(service, resource, data).create
     end
 
     ## #update(resource, data)
@@ -44,8 +49,8 @@ module Spigot
     # @param resource [Object] This is the class implementing the record.
     # @param record   [Object] Optional record of `resource` type already in database.
     # @param data     [Hash]   The already formatted data used to produce the object.
-    def self.update(resource, record, data)
-      new(resource, data, record).update
+    def self.update(service, resource, record, data)
+      new(service, resource, data, record).update
     end
 
     ## #instantiate
@@ -57,7 +62,7 @@ module Spigot
     ## #create
     # Executes the create method on the implementing resource with formatted data.
     def create
-      resource.create(data)
+      data.is_a?(Array) ? create_by_array : create_by_hash(data)
     end
 
     ## #update
@@ -65,6 +70,30 @@ module Spigot
     def update
       record.assign_attributes(data)
       record.save! if record.changed?
+    end
+
+    private
+
+    def create_by_array
+      data.map{|record| create_by_hash(record) }
+    end
+
+    def create_by_hash(record)
+      resolve_associations(record) if @associations.any?
+      resource.create(record)
+    end
+
+    def resolve_associations(record)
+      @associations.each do |association|
+        submodel = association.instance_variable_get(:@value)
+
+        key = submodel.name.underscore.to_sym
+        submodel_data = record.delete(key)
+        if submodel_data
+          object = Record.create(service, submodel, submodel_data)
+          record.merge!("#{key}_id".to_sym => object.id)
+        end
+      end
     end
 
   end

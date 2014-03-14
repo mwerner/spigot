@@ -39,7 +39,14 @@ module Spigot
     ## #conditions
     # The conditions used when querying the database for an existing record
     def conditions
-      {primary_key => format[primary_key]}
+      values = []
+      if format.is_a?(Array)
+        values = format.map{|item| item[primary_key] }
+      else
+        values = format[primary_key]
+      end
+
+      {primary_key => values}
     end
 
     ## #options
@@ -65,6 +72,10 @@ module Spigot
       @resource_map
     end
 
+    def has_resource?(key)
+      service_map[key.to_s.underscore]
+    end
+
     private
 
     def parse(dataset)
@@ -84,7 +95,7 @@ module Spigot
         if service.nil?
           raise MissingResourceError, "There is no #{resource.to_s.underscore} resource_map"
         else
-          raise InvalidServiceError, "No definition found for #{service}"
+          raise InvalidServiceError, "No #{resource.to_s} definition found for #{service}"
         end
       end
 

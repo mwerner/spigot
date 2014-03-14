@@ -15,6 +15,13 @@ module Spigot
         @definitions << definition
       end
 
+      def associations
+        definitions.map do |definition|
+          value = definition.instance_variable_get(:@value)
+          definition if value.is_a?(Class)
+        end.compact
+      end
+
       def options(&block)
         @options = Spigot::Map::Option.new(&block)
       end

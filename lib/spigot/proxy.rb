@@ -72,6 +72,12 @@ module Spigot
       translator.resource_map
     end
 
+    ## #present?
+    # Returns a boolean if the current spigot map has a mapping for the current resource
+    def present?
+      translator.has_resource?(resource)
+    end
+
     ## #options
     # Return a hash of any service specific options for this translator. `Spigot.config` not included
     def options

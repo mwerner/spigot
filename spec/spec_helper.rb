@@ -10,10 +10,20 @@ require File.join(Spigot.root, "script/active_record.rb")
 Dir[File.join(Spigot.root, "spec/fixtures/**/*.rb")].each {|f| require f}
 
 # Mocked Classes
-User = Class.new(Hashie::Mash)
+User = Class.new(Hashie::Mash) do
+  include Spigot::Base
+end
 Post = Class.new(Hashie::Mash)
 
 class ActiveUser < ActiveRecord::Base
+  include Spigot::Base
+end
+
+class Event < ActiveRecord::Base
+  include Spigot::Base
+end
+
+class Profile < ActiveRecord::Base
   include Spigot::Base
 end
 

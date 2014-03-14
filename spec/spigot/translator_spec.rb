@@ -203,6 +203,14 @@ describe Spigot::Translator do
       it 'can specify only one key' do
         subject.conditions.should eq({username: "classyasfuck"})
       end
+
+      context 'with an array of data' do
+        let(:data){ Spigot::Data::User.array }
+        let(:subject){Spigot::Translator.new(User.new, :github, data)}
+        it 'can specify an array of values' do
+          subject.conditions.should eq({username: ['classyasfuck', 'livetilidie']})
+        end
+      end
     end
   end
 

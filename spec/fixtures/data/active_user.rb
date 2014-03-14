@@ -10,7 +10,6 @@ module Spigot
         def alt
           {full_name: 'Frank Sinatra', login: 'livetilidie', auth_token: '987zyx'}
         end
-
       end
     end
   end
