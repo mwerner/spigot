@@ -135,13 +135,13 @@ This method can be used for both `service` and `resource`.
 
 Every class which you include `Spigot::Base` gains a variety of methods to find or save data. These methods can be accessed by a proxy object included on the class. This provides an object that contains all the parsing logic, as well as a more concise syntax.
 
-  # No service specified
-  client = PullRequest.spigot
-  client.find_or_create(data)
+    # No service specified
+    client = PullRequest.spigot
+    client.find_or_create(data)
 
-  # Using the :github service
-  github = PullRequest.spigot(:github)
-  github.find_or_create(data)
+    # Using the :github service
+    github = PullRequest.spigot(:github)
+    github.find_or_create(data)
 
 ## Contributing
 
