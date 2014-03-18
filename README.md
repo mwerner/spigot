@@ -113,6 +113,63 @@ The method you are calling within the block corresponds to the API data key you 
 
 A good way to remember which is which is to say (from the above example) "Their `login` is my `username`. Their `name` is my `full_name`".
 
+## Parsing Data
+
+When Spigot parses data, it will read the resource definition present in your Spigot map. It will format the raw API data which passed in, and return a hash of data in the format the calling model can understand.
+
+Looking at an example:
+
+    Spigot.resource(:pull_request) do
+      id      :github_id
+      metadata do
+        number  :number do |attr|
+          "##{attr}"
+        end
+      end
+      author  User
+      created :created_at
+    end
+
+There are several things happening in this definition, let's look at each one.
+
+**Nested block**
+
+If you have a nested block, Spigot will dig down into the API data, to retreive the keys specified inside the block.
+
+    data = params[:pull_request]
+    if data[:metadata].present?
+      number = data[:metadata][:number]
+    end
+
+**Attribute block**
+
+When you pass a block to an attribute mapping, that block will be executed on the value found at that location in the API data. You can use this to manipulate and massage the data into exactly what you'd like to assign to your attribute. In this case we're prepending a hashtag before the pull request number.
+
+    number = data[:metadata][:number]
+    pr.number = "##{number}"
+
+**Nested Resource**
+
+If the API data you are receiving has an associated resource which you would also like to capture, you can pass a class inside the resource block. Spigot will recognize that `User` has a defined Spigot map and will use it to create a user. Once the nested data has been parsed and used to create a user, Spigot will merge a key value pair associating the created user's id to the API data which `PullRequest` will use.
+
+    userdata = data.delete(:author)
+    user = User.find_or_create_by_api(userdata)
+    data.merge!(user_id: user.id)
+    
+**Resulting Data**
+
+With the above example, this is the data which would be parsed:
+
+    # Original
+    { id: 123, metadata: {number: 456}, author: { id: 987, login: 'mwerner' }, created: '2000-04-01 00:01:00' }
+    
+    # Parsed data, passed to PullRequest
+    { github_id: 123, number: '#456', user_id: 1, created_at: '2000-04-01 00:01:00' }
+
+**Passing Arrays of data**
+
+Anytime you are parsing an array of data, Spigot will iterate over each element of the array and run the invoked function on each item. It will then return an array of objects which have been created for each element of the array.
+
 ## Abbreviated Setup
 
 If you are only consuming one resource from one service, you can use abbreviated syntax to make your Spigot implementation more concise. The following two code blocks are equivalent:
