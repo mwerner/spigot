@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/mwerner/spigot.png?branch=master)](https://travis-ci.org/mwerner/spigot "Travis CI")
 [![Code Climate](https://codeclimate.com/github/mwerner/spigot.png)](https://codeclimate.com/github/mwerner/spigot "Code Climate")
+[![Inline docs](http://inch-pages.github.io/github/mwerner/spigot.png)](http://inch-pages.github.io/github/mwerner/spigot)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mwerner/spigot/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Spigot is an attempt to bring some sanity to consuming external API data. Without Spigot, you need
