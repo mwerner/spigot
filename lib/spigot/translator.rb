@@ -1,6 +1,3 @@
-require 'yaml'
-require 'hashie'
-
 module Spigot
   class Translator
     ## Translator
