@@ -35,6 +35,25 @@ Spigot produces a map of the raw API data you receive to columns in your databas
 
 Much better.
 
+## Usage
+
+This is an example implementation. Assuming you have a User model in your database and you wish to capture the `id`, `name`, `login`, and `avatar_url` from the API payload.
+
+    require 'open-uri'
+    require 'json'
+
+    Spigot.resource :user do
+      id          :github_id
+      name        :name
+      login       :username
+      avatar_url :image_url
+    end
+
+    data = JSON.parse open('https://api.github.com/users/mwerner').read
+    User.spigot.create(data)
+    # #<User id: 1, name: "Matthew Werner", github_id: 50568, username: "mwerner", avatar_url: "https://avatars.githubusercontent.com/u/50568">
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
