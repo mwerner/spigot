@@ -77,6 +77,13 @@ describe Spigot::Map::Definition do
       subject.instance_variable_get(:@parse).should_not be_nil
       subject.instance_variable_get(:@children).length.should eq(0)
     end
+
+    it 'requires a attribute param to parse block' do
+      subject = Spigot::Map::Definition.define(resource, :foo, 'bar') { |val| "formatted-#{val}" }
+      subject.instance_variable_get(:@parse).should_not be_nil
+      subject.instance_variable_get(:@children).length.should eq(0)
+      subject.parse(foo: 'baz').should eq({bar: 'formatted-baz'})
+    end
   end
 
   context '#to_hash' do

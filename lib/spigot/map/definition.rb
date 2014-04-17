@@ -5,7 +5,7 @@ module Spigot
         @name = name
         @value = args
         @children = []
-        instance_eval(&block) if block_given?
+        instance_eval(&block) if @value.nil? && block_given?
         @parse = block unless @children.any?
       end
 
