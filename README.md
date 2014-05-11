@@ -51,7 +51,7 @@ This is an example implementation. Assuming you have a User model in your databa
 
     data = JSON.parse open('https://api.github.com/users/mwerner').read
     User.spigot.create(data)
-    # #<User id: 1, name: "Matthew Werner", github_id: 50568, username: "mwerner", avatar_url: "https://avatars.githubusercontent.com/u/50568">
+    # #<User id: 1, name: "Matthew Werner", github_id: 50568, username: "mwerner", image_url: "https://avatars.githubusercontent.com/u/50568">
 
 
 ## Installation
